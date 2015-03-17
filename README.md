@@ -1,6 +1,76 @@
 # CIRENcours2015
 Analyse de données IRMf, cours du CIREN, mars 2015
 
+# Séance 3 : 
+Programme :
+
+  - 9h-9h30 : discussion sur les deux articles à lire et reprise des points qui n'ont pas été clair la semaine dernière quant au GLM.
+  - 9h30-9h50h : corrigé des exercices : modèle aléatoire, influence du lissage spatial
+  - 9h5a0h-10h10 : théorie sur les tests T et F et les types de seuillage
+  - 10h10-10h45 : TD définition d'un modèle événementiel avec régresseurs de mouvements, tests T et F appropriés, interprétation des cartes d'activation
+  - 10h45-11h : pause dont la durée dépendra du retard
+  - 11h-11h20 : théorie sur les comparaisons multiples
+  - 11h20-12h : TD sur les méthodes de correction pour les comparaisons multiples
+  - 12h et plus : discussions et question supplémentaires.
+
+
+
+## 1. Quelques observations sur le GLM
+
+\\[
+\Huge{Y=\beta X + \epsilon}
+\\]
+
+$\Large{Y}$ est notre série temporelle des mesures effectuées dans un voxel  
+$\Large{X}$ est la matrice de design qu'on a spécifiée  
+$\Large{\beta}$ est le vecteur des praramètres de régressions estimés de telle sorte que $\Large{\epsilon}$, l'erreur résiduelle, soit la plus petite possible
+
+Paramètres du modèle : ils sont entrés au moment de la spécification du modèle.
+
+
+
+## 2. Spécification d'un modèle aléatoire
+Même principe que pour le modèle fait à partir des données de stimulation, mais en modifiant les valeurs pour les **onsets** et les **durations**.
+
+1. Créez un nouveau répertoire pour le modèle aléatoire :
+2. Choisissez ce répertoire comme répertoire courant :
+3. Spécifiez le modèle aléatoire :
+
+```
+Data & Design 
+.Subject/Session
+..Scans
+..Conditions
+...Condition
+...Name <- renseigner ici le nom, par exemple "modele aleatoire"
+....Onsets <- ici il faudra rentrer un vecteur d'onsets aléatoires
+....Durations <- ici entrer une ou des valeurs aléatoires pour les durées
+....Time Modulations <- ne rien changer
+....Parametric Modulations <- ne rien changer
+....Orthogonalise modulations <- ne rien changer
+```
+Exemple de vecteur aléatoire pour les onsets :
+
+`10 15 58 60 80 120 160 199 212 230 235 245 260`
+
+Et pour les durations :
+
+`10 23 0 5 10 20 30 0 10 1 1 10 10`
+
+
+
+## 3. Influence des paramètres du modèle
+
+
+
+
+
+
+
+
+
+# séance 2
+
 ## 1. Organisation des données
 
 ###Les données en IRM fonctionnelle d'activation
@@ -32,8 +102,12 @@ Ex :
 
 Suivre les recommandantions de [Open fMRI](https://openfmri.org/content/data-organization) qui vous aideront à ne pas oublier d'information et à toujours conserver une structure propre pour vos données.
 
+![Une belle arborescence !](images/dataorganisation.png "Organisation des données selon openfmri.org")
+
 Créer un répertoire qui sera celui de base pour toute l'analyse de données IRMf pour ce cours
-ex : /home/sc/Documents/cours_irmf_CIREN_2015
+ex :
+
+`/home/sc/Documents/cours_irmf_CIREN_2015`
 
 L'arborescence peut se faire en utilisant votre navigateur de fichier préféré ou en ligne de commande de la façon suivante :
 
@@ -105,8 +179,8 @@ diskutil unmountDisk /dev/mon_disque
 diskutil mountDisk readOnly /dev/mon_disque
 ```
 
-Remplissez bien aussi les fichiers texte qui décrivent vos données, dans l'idéal, rédigez la partie méthode d'acquisition de votre article à ce moment-là !
-cf  
+Remplissez bien aussi les fichiers texte qui décrivent vos données, dans l'idéal, rédigez la partie méthode d'acquisition de votre article à ce moment-là !  
+cf.  
 [Poldrack R. A., Fletcher P. C., Henson R.N., Worsley K. J., Brett M., and Nichols T. E., Guidelines for reporting an fMRI study. Neuroimage. 2008 Apr 1; 40(2): 409–414 | doi:  10.1016/j.neuroimage.2007.11.048](http://www.sciencedirect.com/science/article/pii/S1053811907011020)
 
 ## 2. Conversion des données avec SPM12 standalone
@@ -149,35 +223,308 @@ Remarques :
 7. Vérifiez que vous avez bien sélectionné le format d'image : ".Output image format         Single file (nii) NIfTI"
 8. Lancez le batch avec le petit triangle vert sur la ligne d'icônes en haut de la fenêtre "Batch Editor".
 9. Une fois la conversion effectuée, vous devez voir un nouveau fichier dans le répertoire `ds000001/sub001/anatomy` : `stest-0011-00001-000001-01.nii`
-10. donner-lui un nom plus convenable, par exemple :
+10. donnez-lui un nom plus convenable, par exemple :
   - En ligne de commande `mv ds000001/sub001/anatomy/stest-0011-00001-000001-01.nii ds000001/sub001/anatomy/anat.nii `
   - avec l'interface de "Batch Editor" : dans la fenêtre menu, cliquez sur `Batch`, puis parmi les onglets de la fenêtre "Batch Editor", sur `BasicIO -> File/Dir Operations -> File Operations -> Move/Delete Files`, puis remplissez les paramètres de la façon suivante :
+
 ```
 Files to move/copy/delete     ...ds000001/sub001/anatomy/stest-0011-00001-000001-01.nii
 Action
 .Move and Rename
-..Move to                    .../cours_irmf_CIREN_2015/ds000001/sub001/anatomy/
+..Move to                            .../cours_irmf_CIREN_2015/ds000001/sub001/anatomy/
 ..Pattern/Replacement List
 ...Pattern/Replacement Pair
-....Pattern                  stest-0011-00001-000001-01.nii
-....Replacement              anat
-..Unique Filenames           Don't Care
+....Pattern                                              stest-0011-00001-000001-01.nii
+....Replacement                                                                    anat
+..Unique Filenames                                                           Don't Care
 ```
-Remarques :
+
+####Images fonctionnelles
+Il suffit de faire pareil avec en sélectionnant
+
+  - les images fonctionnelles du répertoire `ds000001/sub001/BOLD/task001_run001_dicom`, vérifiez que vous avez bien 4620 fichiers sélectionnés.
+  - le répertoire où ranger les nifti 3D : `ds000001/sub001/BOLD/task001_run001_nifti3d`
+
+Une fois les images converties (ça prend plusieurs minutes), vous devez voir 110 nouveaux fichiers créés. Si ce nombre vous étonne ainsi que les noms des fichiers, retourner voir les informations des headers DICOM pour une image fonctionnelle.
+
+Il n'est pas nécessaire de renommer les images fonctionnelles fraîchement covnerties en nifti.
+
+
+####Remarques
 
   - vous pouvez faire l'étape 3 en cliquant d'abord sur le bouton `Batch` du menu, puis en sélectionnant parmi les onglets de la fenêtre "Batch Editor" `SPM -> Util -> Import -> DICOM Import`.
   - pour modifier une sélection, il faut à nouveau cliquer que le bouton `Specify...`, puis il suffit de cliquer sur un des item de la liste de sélection en bas de la fenêtre pour le retirer de la liste, sélectionnez ensuite un autre fichier comme précédemment.
 
+
 ### Conversion des nifti 3D en nifti 4D
 Intérêt : un seul fichier pour toute la série temporelle ! C'est beaucoup moins pénible à manipuler et ça n'encombre pas l'ordi avec des tas de fichiers qui sont une plaie pour les transferts et les sauvegardes.
 
-Batch(programmation avec interface graphique) puis dans les onglets choisir SPM puis Util  puis 3D to 4D conversion
- 
-Choisirles images en 3D puis le output
- 
-On a maintenant deux fichiers
-dans la fenêtre menu, cliquez sur `Batch`, puis parmi les onglets de la fenêtre "Batch Editor", sur `BasicIO -> File/Dir Operations -> File Operations -> Move/Delete Files`, puis remplissez les paramètres de la façon suivante :
+Dans la fenêtre menu, cliquez sur `Batch`, puis parmi les onglets de la fenêtre "Batch Editor", sur `SPM -> Util -> 3D to 4D Conversion`, puis remplissez les paramètres de la façon suivante :
+```
+3D Volumes       # sélectionnez comme vous savez désormais le faire toutes les images .nii du répertoire où vous venez de les créer. Vérifiez que vous en avez bien sélectionné 110.                                                                       
+Output Filename  # choissisez un nom approprié, cf [Open fMRI](https://openfmri.org/content/data-organization) task001_run001.nii
+Data Type        # laisser comme c'est sauf si vous savez exactement pourquoi changer de format
+```
 
-  - un fichier .mat (avec l’information d’orientation de l’image dans l’espace) : c’est celui ci qui va être modifié par les opérations de recalage des prétraitements. 
- - un fichier image .nii
+Vous devez voir deux fichiers :
 
+  - un fichier image task001_run001.nii
+  - un fichier task001_run001.mat (qui contient l’information d’orientation de l’image dans l’espace) : c’est celui-ci qui va être modifié par les opérations de recalage des prétraitements. 
+
+
+## 3. Principe de l'analyse
+
+On veut trouver les régions cérébrales impliquées dans le processus cérébral visé par la tâche qu'on fait faire au sujet.
+Dans ces régions, le signal devrait varier comme la modulation qu’on impose au sujet par le paradigme expérimental. La série temporel du signal dans ces voxels devrait suivre la série temporelle des conditions comportementale.
+ 
+### Le GLM
+Le principe de base pour l'analyse, c’est la corrélation entre notre signal et la modulation qu'on impose par le paradigme expérimental.  
+L'analyse se fait par régression multiple : dans chaque voxel, on va estimer à quel point cette modulation contribue au signal. On appelle cette méthode "massivement univariée".
+
+
+### Petits soucis de données corrélées
+Comme d'habitude en statistiques, la régression ne fonctionne que si les données sont indépendantes. Or les mesures dans nos voxels (qqs mm3) ne sont pas indépendantes, elles sont corrélées spatialement pour des raisons biologiques évidentes.  
+Et pire : dans un même voxel, les mesures sont corrélées temporellement puisque le signal BOLD a une fonction de transfert qui étale la réponse neuronale dans le temps sur une dizaine de secondes.
+ 
+Les statisticiens ont bien galéré a trouver les bonnes méthodes statistiques pour prendre en compte ces corrélations temporelles.  
+cf article :  
+[Poline J.-B., and Brett M., The general linear model and fMRI: Does love last forever? NeuroImage 62 (2012) 871–880](http://projects.iq.harvard.edu/files/imagenesmedicas/files/polinekd.pdf)
+ 
+Aujourd’hui des méthodes bayésiennes permettant d’analyser voxel par voxel les autocorrélations temporelles plutôt que d'estimer un modèle d'auto-régression sur tout le cerveau.
+Voici un lien vers un rapport technique écrit par l'équipe du FIL : [Penny W.D., and Flandin G. Bayesian analysis of single-subject fMRI: SPM implementation. Technical report, Wellcome Department of Imaging Neuroscience, 2005](http://www.fil.ion.ucl.ac.uk/spm/doc/papers/vb3.pdf)  
+WikiSPM est aussi bien fait si on a besoin d’aide sur ces nouvelles méthodes.
+
+### Rappels sur les prétraitements
+Avant d'appliquer le modèle d'analyse en régression multiple (GLM), il faut nettoyer le signal, ce sont les **prétraitements**. Voici un exemple classique des prétraitements à effectuer en vue d'une analyse d'un groupe de sujets.
+
+  - recalage rapide des images anatomiques et fonctionnelles sur un template
+  - estimation des mouvements de la tête du sujet : paramètres de recalage entre chaque image fonctionnelle
+  - segmentation de l'image anatomique et calcul des paramètres de normalisation, c'est-à-dire le champ de déformation à appliquer à l'image anatomique pour qu'elle colle à un template (opération qui déforme les images)
+  - application de ces paramètres de ce champ de déformation à l'image anatomique et aux images fonctionnelles. **À ce moment, les données sont modifiées !**
+  - lissage spatial des images normalisées par un kernel gaussien :
+    - pour avoir un meilleur rapport signal sur bruit
+    - parce qu'on vient de modifier les propriétés locales des images (interpolation due au recalage et voxels chamboulés par la normalisation)
+    - parce qu'on a besoin de données gaussiennes pour appliquer la régression linéaire massivement univariée
+
+## 4. Vérification des données
+
+### Visualiser la série temporelle complete
+Utiliser de préférence **FSLview** dont le petit outil qui permet de voir la série temporelle d'images fonctionnelles comme un film (l'icône ressemble à une pellicule de film) est extrèmement pratique pour vérifier globalement les données :
+
+  - vérification de la bonne acquisition du cerveau du sujet (pas de bout du cerveau coupé par la matrice d'acquisition)
+  - vérification d'influence des artefacts de susceptibilité (notamment dans les régions orbito-frontals, frontopolaires, les hippocampes et les amygdales).
+  - détection de volumes artefactés
+
+### Observations des sources de variance dans le signal
+Visualiser les séries temporelles : avec FSLview, dans les onglets, sélectionnez `Tools -> Timeseries`.
+
+Remarques :
+
+  - variations du signal en dehors du la tête du sujet (bruit)
+  - variations du signal en dehors du tissu cérébral (regarder dans les ventricules)
+  - On peut remarquer de fortes variations dans les régions fortement vascularisées, au niveau des carotides par exemple.
+  - variations associées aux mouvements de tête du sujet (pattern moiré/strié)
+  - variations dans les régions touchées par les artefacts de succeptibilité
+  - drift du signal (variation lente)
+  
+### Visualisation de la position des images dans l'espace
+On commence par vérifier que le sujet n'a pas bougé pendant l'acquisition de l'image anatomique, ni entre cette acquisition et celle de la première image fonctionnelle
+
+1. Dans la fenêtre de menu de SPM, cliquez sur le bouton `Check Reg`.
+2. Sélectionnez votre image anatomique et la première frame de l'image fonctionnelle 4D.
+3. Vérifiez si les deux images sont correctes (pas d'artefact bizarre)
+4. Vérifiez que l'ensemble du cerveau et plus finement que les structures crébrales sont bien au même endroit sur les deux images, sinon ça veut dire que le sujet a bougé et qu'il faudra peut-être recaler les images à la main.
+
+### Positionner les images dans le repère MNI
+
+Il s'agit de positionner les images sur le même repère que les template qu'on utilise ensuite pour la normalisation.  
+On estime la transformation à appliquer en travaillant sur l'image anatomique, qui est plus précise donc où il est plus facile de voir les structures cérébrales. On appliquera cette même transformation à toutes les images fonctionnelles ensuite.
+
+Principe :
+
+- mettre l'origine de l'image sur la commissure antérieure
+- rapprocher l'orientation de celle du template (cerveau moyen) : plan xy qui passe par CA-CP, plan yz sur la sissure inter-hémisphérique.
+- on n'est pas au millimètre près
+
+Rentrer les valeurs suivantes dans le tableau en bas à gauche :
+
+transformation|valeur
+--------------|----
+right {mm}    | 1.4
+forward {mm}  | -58
+up  {mm}      | 18.9
+pitch {rad}   | 0.26
+roll  {rad}   | -0.03
+yaw {rad}     | 0.06
+
+**Ne pas toucher aux `resize {x, y ou z}` !**
+ 
+Pour appliquer la transformation aux images
+1. cliquez sur le bouton `Reorient...`
+2. vérifiez que l'image anatomique est déjà sélectionnée (ne pas hésiter à ajuster la taille de la fenêtre pour y voir les path en entier)
+3. sélectionnez aussi toutes les frames de l'image fonctionnelle 4D (en mettant un filtre `Inf` à la place du `1`)
+4. cliquez sur le bouton `Done`
+ 
+Ensuite pour l’ouvrir Chek reg choisir l’image anatomique et une image fonctionnelle(en tapant dans le filtre le numéro de l’image par exemple)
+On vérifie que les deux images sont bien alignées
+ 
+6- Réalignement
+ 
+Avoir toujours les mêmes parties du cerveau dans chaque voxel
+On prend une référence soit une image moyenne soit la première
+
+-Realign estimate
+-Créer une "New SEssion" pui Sélectionner cette session 
+-Specify puis choisir les images BOLD« inf » (sans les duplicatas)
+(aide pour retrouver les fichierscibles si ils ont été renommés : <f.* va permettre de ne sélectionner que les fichierscommençant par f)
+- Num passes : register to first
+-play
+ Permetde vérifier l’ampleur du recalage pour chaque image et chaque translation etangle
+ 
+  J'obtiens un fichier rp_func4D.txt
+  
+ Quelles sont les transformations de réalignement qui ont été appliquées à chaque image fonctionnelle ?
+
+Il faut repérer les artefacts
+ 
+ 
+7- Coreggester estimate (on déforme le cerveau de façon à ce qu'il rentre dans l'image de référence)
+Reference :1 ère image fonctionnelle uniquement (on garde la première image fonctionnelle comme référence et on bouge l'anatomique)
+Sourceimage : image anatomique
+
+ 
+8- Segmentation (seulement sur l'anat) : calcul des déformations nécessaires à mettre en place sur le cerveau pour normaliser par la suite.
+Objectif: Séparer matière grise, matière blanche, liquide céphalo-rachidien
+Volumes : je prends mon image anatomique
+il faut descendre tout en bas de la denêtre  choisir Déformation fields  et mettre "inverse et forward" (explication?)
+
+ 
+9-Normaliser
+Maintenant on va modifier nos images
+Normalize
+Deformation field: Selectionner le nouveau fichier obtenu qui représente la déformation en chaque point (Y-anat va de notre image autemplateet in versement pour inverse y-anat) dans deformation field
+Image to Write : On va choisir les images à réécrire« image to write » : les anat PUIS toutes les fonctionnelles (EN 2 FOIS)
+Voxel Size : je choisis la taille des voxel dans l'image d'arrivée (par ex : l'image anat était en 1 x 1 x1, je la ré-écis en 1 x 1 x 1). je fais la même chose avce les images fonctionnelles qui sont en 3 x3 x3.
+On obtient un fichier commençant par w
+Check Reg : ouvrir les 2 (le fichier commence par "w"). 
+
+Message erreur: error in job execution
+ error using => MATLABbatch system
+ 
+10 - Smoothing: moyennage de la valeur d'un voxel avec les voxel voisins (plus la taille du filtre augmente plus le moyennage inclue de voxels voisins)
+Smooth = lissage spatial.
+Je choisis les images fonctionnelles que je viens de formaliser ("w...") - ne pas oublier de mettre   ^w.*  et "inf" pour prendre bien toutes les images. 
+Je choisis la taille du filtre gaussien : (8 par 8 ou 4 par 4) (FWHE)
+On obtient un fichier commençant par sw
+Check reg : je choisis mes images "w" et "sw" en BOLD. L'une est plus floue que l'autre car elle a été smoothée. Ici on travaille uniquement sur des activations > ou = à ce qui a été smoothée (8 mm). 
+
+### Spécification du modèle
+
+La manip est construite de la façon suivante :  
+lorsqu'apparaît une croix de fixation (durée 15s) le sujet doit la fixer, sans appuyer sur quelque bouton que ce soit.  
+En alternance avec cette tâche de fixation, il y a une tâche de décision motrice : pendant une période de 32 secondes, des instructions sous forme d'un mot affiché à l'écran : soit "DROITE" soit "GAUCHE", vont s'afficher. Alors le sujet doit appuyer le plus rapidement possible après apparition de l'instruction, mais sans se tromper, sur un bouton, avec le pouce de la main correspondant à l'instruction.  
+Les instructions "DROITE" et "GAUCHE" sont randomisées, l'intervalle de temps entre deux instructions consécutives aussi.
+
+
+Dans le cadre de la régression linéaire qu'on utilise pour analyser notre signal, le régresseur qui décrit la série temporelle des blocs d'instruction motrice est une variable indicatrice qui vaut 0 pour chaque temps de mesure auquel le sujet était soumis à la tâche de fixation et 1 pour chaque temps de mesure auquel le sujet était engagé dans la tâche de décision motrice.
+Pour SPM, une façon de décrire cette variable indicatrice, au lieu de l'expliciter sous forme d'une série de 0 et de 1 (en fait c'est possible ainsi), consiste à définir le régresseur par la donnée de 4 informations :
+
+- un nom
+- un vecteur de temps de début de chaque période où le sujet effectue la tâche de décision motrice
+- un vecteur de durée de chacune de ces périodes
+- préciser
+  - s'il faut considérer une modulation paramétrique pour ce régresseur (explications sur ce sujet dans une prochaine séance)
+  - et/ou une expansion de type Volterra pour prendre en compte des effets de non-linéarité correspondant à des corrélations entre essais
+  -  puis si ces modulations doivent être orthogonalisées.
+ 
+C'est ce que vous propose l'interface graphique sous les termes suivants
+
+```
+Data & Design 
+.Subject/Session
+..Scans
+..Conditions
+...Condition
+...Name <- renseigner ici le nom, par exemple "decision motrice"
+....Onsets <- ici il faudra rentrer un vecteur d'onsets, c'est-à-dire des temps de début de chaque bloc, ces valeurs dépendent évidemment de ce que vous avez choisi comme "Units for design au tout début de la liste des paramètres qui spécifient le modèle. De préférence, utiliser les secondes si vous ne voulez pas risquer d'erreur en faisant les conversions vous-mêmes
+....Durations <- ici entrer une valeur (si tous les blocs ont la même durée), ou un vecteur de valeurs si ce n'est pas le cas et évidemment ce vecteur doit avoir le même nombre d'éléments que le vecteur d'onsets
+....Time Modulations <- ne rien changer à moins de savoir ce que vous faites
+....Parametric Modulations <- on n'a aucune raison de considérer une modulation paramétrique pour le moment
+....Orthogonalise modulations <- laisser comme c'est de toute façon on n'utilise pas de modulation pour le moment.
+```
+
+#####Pour ce qui est des valeurs à prendre en compte pour le vecteur d'onsets, voici deux façon de procéder.
+
+#####1. À partir des informations a priori sur la stimulation
+La manip est constituée de 12 blocs en tout, avec en alternance 6 blocs de fixation et 6 blocs d'instructions motrices.
+Si on se base sur ces informations pour construire le régresseur, voici ce que ça donne :
+
+Tableau qui décrit la série temporelle des tâches :
+
+duree|tâche|timing de debut de chaque bloc (secondes depuis le début de la stimulation)
+:----|:----|:----
+15 secondes| de fixation                |        0
+32 secondes| d'instructions motrices    | 15
+15 secondes| de fixation                |        47 = 15+32
+32 secondes| d'instructions motrices    | 62 = 15+32+15
+15 secondes| de fixation                |       94 = 15+32+15+32     
+32 secondes| d'instructions motrices    | 109 = 15+32+15+32+15 
+15 secondes| de fixation                |         141 = 15+32+15+32+15+32
+32 secondes| d'instructions motrices    |  156 = 15+32+15+32+15+32+15
+15 secondes| de fixation                |         188 = 15+32+15+32+15+32+15+32
+32 secondes| d'instructions motrices    |  203 = 15+32+15+32+15+32+15+32+15
+15 secondes| de fixation                |         218 = 15+32+15+32+15+32+15+32+15+32
+32 secondes| d'instructions motrices    |  250 = 15+32+15+32+15+32+15+32+15+32+15
+
+Si on liste les timing de début des blocs d'instructions motrices, on a donc
+
+`15 62 109 156 203 250`
+
+Ce qui s'exprime plus facilement sous la forme suivante en syntaxe matlab :
+
+```matlab
+15:15+32:(15+32)*6
+```
+Cette formule peut directement être écrite comme ça dans le champ de spécification des valeurs de la fenêtre pop-up qui apparaît lorsque vous cliquez sur le bouton "specify" juste au dessus du panneau d'aide de la fenêtre).
+ 
+Pour ceux qui préfèrent utiliser python, vous pouvez bien entendu lancer une petite ligne de commande python et y entrer l'expression suivante:
+
+```python
+range(15,(32+15)*6,32+15)
+```
+ensuite les valeurs obtenues peuvent être copiées et collées dans la fenêtre de pop-up.
+
+Et chacun de ces blocs dure
+
+`duration : 32 secondes`
+
+Pour vous aider à y voir plus clair, l'image ci-dessous montre ce que ça donne graphiquement.
+Voir le repository GitHub pour le code python qui permet de reproduire l'image.
+
+![Code pyhton sur GitHub](images/task_and_acquisition_time_series.png)
+
+#####2. À partir du fichier des informations enregistrées par le logiciel de stimulation pendant la manip, où apparaissent les timings réels d'apparition des instructions.
+
+Si vous utilisez R, vous pouvez retrouver les timings de la façon suivante :
+
+```r
+d<-read.csv('path_vers_le_repertoire_racine_de_vos_analyses_de_donnees/ds000001/sub001/behav/data_1.txt',header=T,sep=" ")
+onsets<-d[which(d$task==0)+1,"t_stim"]
+durations<-d[which(d$task==0)+10,"t_fin_essai"]-d[which(d$task==0)+1,"t_stim"]
+```
+
+Ce qui donne la liste de valeurs suivantes pour les onsets :
+
+`15.109    62.391    109.641    156.907    204.173     251.423`
+
+Et pour les durations :
+
+`32.217 32.183 32.199 32.198 32.184 32.180`
+
+Pour ceux qui font du python, on peut faire la même chose
+
+```python
+import pandas
+d=pandas.read_csv('/Users/sc/Documents/cours_fmri/test_full/ds000001/sub001/behav/data_1.txt',sep=' ',header=0)
+onsets=d.ix[d[d['task']==0].index.values+1]['t_stim'].valuesdurations=d.ix[d[d['task']==0].index.values+10]['t_fin_essai'].values-d.ix[d[d['task']==0].index.values+1]['t_stim'].values
+```
