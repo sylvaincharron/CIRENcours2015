@@ -29,11 +29,41 @@ Paramètres du modèle : ils sont entrés au moment de la spécification du mod�
 
 ### Visualisation des paramètres de régression
 
+ Quand un modèle a été estimé, vous pouvez directement regarder les valeurs des paramètres de régression dans les images **beta_000X.nii** créées ainsi que la représentation graphique de l'estimation du modèle en 
  
+ 1. En utilisant le bouton `Display` de la fenêtre **Menu**, aller repérer sur l'image anatomique normalisée quelques voxels pertinents et notre leurs coordonnées "world", par exemple
+   - un dans le cortex visuel où on a déjà vu que le signal était fortement corrélé à la stimulation
+   - un voxel où a priori le signal ne sera pas du tout lié au un traitement cognitif lié à la stimulation, typiquement en plein dans un ventricule
+   - un voxel quelconque ailleurs dans le cerveau
+2. Encore avec `Display`, vous pouvez noter les valeurs des coefficients de régression associés à chacun des régresseurs directement dans les images **beta_000X.nii** (attention à l'interpolation pour la visualisation dans la fenêtre **Graphics**).
+3. Reprennez le modèle **model001** et choisissez d'afficher les résultats en cliquant sur le bouton `Results`, puis en sélectionnant la **SPM.mat** correspondante, puis dans la fenêtre **SPM contrast manager** le contraste **001{T} decision_motrice-vs-fication**, puis spécifiez le seuil suivant : 
+  - **apply masking** : `None`
+  - **p value adjustmeent to control** : `None`
+  - **Threshold {T or p value}** : `1`
+  - **& extent threshold {voxels}** : `0`
+4. En entrant les coordonnées que vous avez notées dans l'encadré **co-ordinates** tout en bas de la fenêtre **SPM{T}: Result**, vous pouvez afficher des informations relatives aux voxels que vous aviez choisis :
+  - la valeur du contraste estimé en ce point : 
+        1. cliquez sur le bouton `plot` dans l'encadré **Display**
+        2. choisissez dans la liste déroulante **Contrast estimates and 90% C.I.**
+        3. le graphe correspondant s'affiche dans le fenêtre **Graphics**
+        4. si vous changez les coordonnées, le graphe se met à jour automatiquement !
+
+        ![Contrast estimates and 90% C.I.](images/contrast_estimate_and_90CI.jpg "Contrast estimates and 90% C.I.")
+        
+  - le graphe du signal et de la composante relative à notre régresseur d'intérêt :
+        1. cliquez sur le bouton `plot` dans l'encadré **Display**
+        2. dans la liste déroulante, choisissez **Fitted responses**
+        3. pour **predicted or adjusted response?, choisissez `predicted`
+        4. dans la liste déroulante **plot against...**, choisissez **scan or time**
+        3. le graphe correspondant s'affiche dans le fenêtre **Graphics**
+        4. si vous changez les coordonnées, le graphe se met à jour 
+
+        ![Signal et composante relative au régresseur](images/fitted_and_error_againt_time.jpg "Signal et composante relative au régresseur")
 
 
 ## 2. Spécification d'un modèle aléatoire
 Même principe que pour le modèle fait à partir des données de stimulation, mais en modifiant les valeurs pour les **onsets** et les **durations**.  
+
 Cette fois, on va voir comment enchaîner des étapes : Créez un nouveau répertoire pour le modèle aléatoire, puis le choisir comme répertoire courant.
 
 1. Créez un nouveau répertoire pour le modèle aléatoire et le choisir comme répertoire courant:
@@ -45,7 +75,6 @@ Cette fois, on va voir comment enchaîner des étapes : Créez un nouveau réper
   - New Directory Name : model002
 3. Puis pour le module Change Directory, il y a une astuce : utiliser le bouton `Dependency` qui apparaît au lieu de sélectionner le répertoire, et indiquer que vous choissez le répertoire que vous aurez créé avec le module `Make Directory` juste avant en sélectionnant `Make directory: Make Directory 'model002'` puis cliquer sur le bouton `OK`. Cf. image en dessous.
 4. Vous pouvez exécuter le batch avec le petit bouton vert
-
 ![Principe du bouton "Dependency" du Batch Editor](images/fenetre-dependency.jpg "Principe du bouton "Dependency" du Batch Editor")
 
 
@@ -89,8 +118,9 @@ Cette fois, on va voir comment enchaîner des étapes : Créez un nouveau réper
 
 
 
-Maintenant que vous avez compris le principe, vous pouvez supprimer ce répertoire et recommencer en ajoutant la spécification du modèle, son exécution et les étapes qui vous paraissent pertinentes
-. Spécifiez le modèle aléatoire :
+Maintenant que vous avez compris le principe, vous pouvez ajouter dans ce batch la spécification du modèle, son exécution et les étapes qui vous paraissent pertinentes, puis le sauvegarder.
+
+Pour Spécifier le modèle aléatoire :
 
 ```
 Data & Design 
@@ -137,7 +167,7 @@ Résultat :
 
 
 
-
+Le batch correspondant à cet exemple, ainsi qu'un batch pré-mâché où vous n'avez plus qu'à remplir les informations relatives à vos path et noms de fichiers sont disponible sur GitHub
 
 ## 3. Influence des paramètres choisis pour l'analyse
 
@@ -149,7 +179,7 @@ Cf. aricle de Joshua Carp.
 ### Paramètre de modèle de premier niveau : basis function
 
 
-# séance 2
+# Séance 2
 
 ## 1. Organisation des données
 
@@ -292,13 +322,9 @@ Remplissez bien aussi les fichiers texte qui décrivent vos données, dans l'id�
 cf.  
 [Poldrack R. A., Fletcher P. C., Henson R.N., Worsley K. J., Brett M., and Nichols T. E., Guidelines for reporting an fMRI study. Neuroimage. 2008 Apr 1; 40(2): 409–414 | doi:  10.1016/j.neuroimage.2007.11.048](http://www.sciencedirect.com/science/article/pii/S1053811907011020)
 
-## 2. Conversion des données avec SPM12 standalone
+## 2. Rappels sur l'interface de SPM12 standalone
 
-Malheureusement avec SPM, il faut procéder en deux étapes.
-Comme SPM n'est pas bien conçu pour le traitement des nifti 4D (contrairement à FSL...), il vaut mieux faire la conversion depuis les DICOM directement avec SPM, sans passer par un autre logiciel, sinon l'opération de concaténation des images en une seul fichier 4D risque de comporter des erreurs.
-Par ailleurs si vous avez des données nifti compressées (.nii.gz), SPM ne les supporte pas trop (contrairement à FSL...), donc décompressez vos données en .nii avant de les copier.
-
-### lancement de SPM12 standalone
+### 2.1 lancement de SPM12 standalone
 
 1. Lancez SPM12 standalone
 2. Cliquez sur le bouton `fMRI`
@@ -306,6 +332,9 @@ Par ailleurs si vous avez des données nifti compressées (.nii.gz), SPM ne les 
   - **SPM12 (6225): Menu** : le menu, celle qui est toute verte, généralement en haut à gauche, avec les boutons regroupés par phase de traitement des données
   - **SPM12 (6225): Graphics** : celle à droite où s'afficheront toutes les sorties graphiques, qui porte le logo suivi de quelques informations et liens
   - **SPM12 (6225)** généralement en bas à gauche avec écrit "SPM12" en filigrane, qui sert à afficher la barre de progression des traitement et plus tard à beaucoup d'autres choses.
+
+### 2.2 Changement de répertoire  
+
 3. Je vous conseille d'entrée de jeu de vous placer dans votre répertoire d'analyse de données, pour ce faire, dans la fenêtre de menu, cliquez sur la liste `Utils` et sélectionnez `CD`
 4. Un pop-up **Select new working directory** s'ouvre, il est constitué de deux panneaux
   - à gauche le panneau de **navigation**, où un clic simple sur un nom de répertoire permet d'y descendre
@@ -318,8 +347,15 @@ Remarques :
   - le champ **Filter** s'utilise avec des expressions régulières
   - les trois champs en haut : **Dir**, **Up** et **Prev** aident à la navigation dans l'arborescence.
   - la première ligne de la liste déroulante **Prev** contient toujours le path vers le répertoire d'installation de SPM12 standalone.
+
+## 3. Conversion des données avec SPM12 standalone
+
+Malheureusement avec SPM, il faut procéder en deux étapes.
+Comme SPM n'est pas bien conçu pour le traitement des nifti 4D (contrairement à FSL...), il vaut mieux faire la conversion depuis les DICOM directement avec SPM, sans passer par un autre logiciel, sinon l'opération de concaténation des images en une seul fichier 4D risque de comporter des erreurs.
+Par ailleurs si vous avez des données nifti compressées (.nii.gz), SPM ne les supporte pas trop (contrairement à FSL...), donc décompressez vos données en .nii avant de les copier.
+
  
-### Conversion des dicom en nifti 3D
+### 3.1 Conversion des dicom en nifti 3D
 
 ####Image anatomique
 1. Dans la fenêtre de menu , cliquez sur le bouton `DICOM Import`, ce qui ouvre une fenêtre pop-up **Batch Editor**
@@ -365,7 +401,7 @@ Il n'est pas nécessaire de renommer les images fonctionnelles fraîchement covn
   - pour modifier une sélection, il faut à nouveau cliquer que le bouton `Specify...`, puis il suffit de cliquer sur un des item de la liste de sélection en bas de la fenêtre pour le retirer de la liste, sélectionnez ensuite un autre fichier comme précédemment.
 
 
-### Conversion des nifti 3D en nifti 4D
+### 3.2 Conversion des nifti 3D en nifti 4D
 Intérêt : un seul fichier pour toute la série temporelle ! C'est beaucoup moins pénible à manipuler et ça n'encombre pas l'ordi avec des tas de fichiers qui sont une plaie pour les transferts et les sauvegardes.
 
 Dans la fenêtre menu, cliquez sur `Batch`, puis parmi les onglets de la fenêtre **Batch Editor**, sur `SPM -> Util -> 3D to 4D Conversion`, puis remplissez les paramètres de la façon suivante :
@@ -381,7 +417,151 @@ Vous devez voir deux fichiers :
   - un fichier task001_run001.mat (qui contient l’information d’orientation de l’image dans l’espace) : c’est celui-ci qui va être modifié par les opérations de recalage des prétraitements. 
 
 
-## 3. Principe de l'analyse
+
+## 4. Vérification des données
+
+### 4.1 Visualiser la série temporelle complete
+Utiliser de préférence **FSLview** dont le petit outil qui permet de voir la série temporelle d'images fonctionnelles comme un film (l'icône ressemble à une pellicule de film) est extrèmement pratique pour vérifier globalement les données :
+
+  - vérification de la bonne acquisition du cerveau du sujet (pas de bout du cerveau coupé par la matrice d'acquisition)
+  - vérification d'influence des artefacts de susceptibilité (notamment dans les régions orbito-frontals, frontopolaires, les hippocampes et les amygdales).
+  - détection de volumes artefactés
+
+### 4.2 Observations des sources de variance dans le signal
+Visualiser les séries temporelles : avec FSLview, dans les onglets, sélectionnez `Tools -> Timeseries`.
+
+Remarques :
+
+  - variations du signal en dehors du la tête du sujet (bruit)
+  - variations du signal en dehors du tissu cérébral (regarder dans les ventricules)
+  - On peut remarquer de fortes variations à haute fréquence (pulsation cardiaque) dans les régions fortement vascularisées, par exemple au niveau des carotides internes.
+  - variations associées aux mouvements de tête du sujet (pattern moiré/strié)
+  - variations dans les régions touchées par les artefacts de succeptibilité
+  - drift du signal (variation lente)
+  
+### 4.3 Visualisation de la position des images dans l'espace
+On commence par vérifier que le sujet n'a pas bougé pendant l'acquisition de l'image anatomique (stries sur l'image), ni entre cette acquisition et celle de la première image fonctionnelle.
+
+1. Dans la fenêtre de menu de SPM, cliquez sur le bouton `Check Reg`.
+2. Sélectionnez votre image anatomique et la première frame de l'image fonctionnelle 4D.
+3. Vérifiez si les deux images sont correctes (pas d'artefact bizarre)
+4. Vérifiez que l'ensemble du cerveau (en tenant compte des artefacts de susceptibilité, évidemment) et plus que les structures cérébrales principales (corps calleux, lobes, ventricules) sont bien au même endroit sur les deux images, sinon ça veut dire que le sujet a bougé et qu'il faudra peut-être recaler les images à la main.
+
+
+## 5. Rappels sur les prétraitements
+Avant d'appliquer le modèle d'analyse en régression multiple (GLM), il faut nettoyer le signal, ce sont les **prétraitements**. Voici par exemple la série des prétraitements classiques selon les recommandations pour le logiciel SPM à effectuer en vue d'une analyse d'un groupe de sujets.
+
+  0. **recalage rapide** des images anatomiques et fonctionnelles sur un template, c'est ce qu'on vient de faire juste avant.
+  1. **réalignement** : estimation des mouvements de la tête du sujet, qui consiste à calculer les paramètres d'un recalage rigide entre chaque volume fonctionnel et une référence, habituellement le premier volume
+  2. **recalage intermodal** : cette fois on recale automatiquement les images anatomiques sur l'image fonctionnelle de référence 
+  3. **segmentation** de l'image anatomique et calcul des paramètres de normalisation, c'est-à-dire le champ de déformation à appliquer à l'image anatomique pour qu'elle colle à un template (opération qui déforme les images)
+  4. **normalisation** : application de ces paramètres de ce champ de déformation à l'image anatomique et aux images fonctionnelles. **À ce moment, les données sont modifiées !**
+  5. **lissage spatial** des images normalisées par un kernel gaussien :
+    - pour avoir un meilleur rapport signal sur bruit
+    - parce qu'on vient de modifier les propriétés locales des images (interpolation due au recalage et voxels chamboulés par la normalisation)
+    - parce qu'on a besoin de données gaussiennes pour appliquer la régression linéaire massivement univariée
+
+####Remarque importante :  
+il est **toujours** préférable de réfléchir aux prétraitements à appliquer en rapport avec vos hypothèses et vos analyses, et de les optimiser pour votre étude.
+
+### 5.1 Recalage rapide (repère MNI)
+
+Il s'agit de positionner les images sur le même repère que les template qu'on utilise ensuite pour la normalisation.  En effet, les algorithmes utilisés par SPM sont optimisés pour des images qui sont déjà proches l'une de l'autre.
+On estime la transformation à appliquer en travaillant sur l'image anatomique, qui est plus précise donc où il est plus facile de voir les structures cérébrales. On appliquera cette même transformation à toutes les images fonctionnelles ensuite.
+
+Principe :
+
+- mettre l'origine de l'image sur la commissure antérieure
+- rapprocher l'orientation de celle du template (cerveau moyen) : plan xy qui passe par CA-CP, plan yz sur la scissure inter-hémisphérique.
+- on n'est pas au millimètre près
+
+Rentrer les valeurs suivantes dans le tableau en bas à gauche :
+
+transformation|valeur
+--------------|----
+right {mm}    | 1.4
+forward {mm}  | -58
+up  {mm}      | 18.9
+pitch {rad}   | 0.26
+roll  {rad}   | -0.03
+yaw {rad}     | 0.06
+
+**Ne pas toucher aux `resize {x, y ou z}` !**
+ 
+Pour appliquer la transformation aux images
+
+1. cliquez sur le bouton `Reorient...`
+2. vérifiez que l'image anatomique est déjà sélectionnée (ne pas hésiter à ajuster la taille de la fenêtre pour y voir les path en entier)
+3. sélectionnez aussi toutes les frames de l'image fonctionnelle 4D (en mettant un filtre `Inf` à la place du `1`)
+4. cliquez sur le bouton `Done`
+ 
+Ensuite pour l’ouvrir Chek reg choisir l’image anatomique et une image fonctionnelle(en tapant dans le filtre le numéro de l’image par exemple)
+On vérifie que les deux images sont bien alignées
+
+### 5.2 Réalignement
+ 
+Avoir toujours les mêmes parties du cerveau dans chaque voxel
+On prend une référence soit une image moyenne soit la première
+
+- Realign estimate
+- Créer une "New Session" puis Sélectionner cette session 
+- Specify puis choisir les images BOLD« inf » (sans les duplicatas)
+(aide pour retrouver les fichierscibles si ils ont été renommés : <f.* va permettre de ne sélectionner que les fichierscommençant par f)
+- Num passes : register to first
+- play
+
+En sortie, SPM propose affiche dans la fenêtre graphique deux graphes :
+ - les paramètres estimés pour les trois translations (en mm)
+ - les paramètres estimés pour les trois rotations (en degrés).
+ Permetde vérifier l’ampleur du recalage pour chaque image et chaque translation etangle
+ 
+  J'obtiens un fichier rp_func4D.txt
+  
+ Quelles sont les transformations de réalignement qui ont été appliquées à chaque image fonctionnelle ?
+
+Il faut repérer les artefacts
+ 
+ 
+### 5.3 Coreggester estimate
+On calcule les paramètres de recalage (pour déplacer sans déformer !) de telle sorte que l'image anatomique soit dans le même repère spatial que l'image fonctionnelle de référence. Il s'agit donc encore d'un recalage rigide (6 degré de liberté : 3 translations et 3 rotations).  
+**Reference image** :1ère image fonctionnelle uniquement (on garde la première image fonctionnelle comme référence et on bouge l'anatomique)  
+**Source image** : image anatomique
+
+ 
+### 5.4 Segmentation (seulement sur l'anat)
+
+Calcul des déformations nécessaires à mettre en place sur le cerveau pour normaliser par la suite.
+
+Objectif: Séparer matière grise, matière blanche, liquide céphalo-rachidien
+Volumes : je prends mon image anatomique.  
+il faut descendre tout en bas de la denêtre  choisir Déformation fields  et mettre "inverse et forward" (explication?)
+
+ 
+### 5.5 Normalisation
+Maintenant on va modifier nos images.  
+Bouton `Normalize`  
+Deformation field: Selectionner le nouveau fichier obtenu qui représente la déformation en chaque point (Y-anat va de notre image autemplateet in versement pour inverse y-anat) dans deformation field  
+Image to Write : On va choisir les images à réécrire« image to write » : les anat PUIS toutes les fonctionnelles (EN 2 FOIS)  
+Voxel Size : je choisis la taille en mm des voxel dans l'image d'arrivée (par ex : l'image anat était en 1 x 1 x 1, je la ré-écris en 1 x 1 x 1). Même chose avce les images fonctionnelles qui sont en 3 x 3 x 3.  
+On obtient un fichierr pour l'image normalisée qui commence par "w"  
+`Check Reg` : ouvrir les images avant et après normalisation. 
+
+Message erreur: error in job execution
+ error using => MATLABbatch system
+ 
+### 5.6 - Lissage spatial
+Moyennage de la valeur d'un voxel avec les voxel voisins (plus la taille du filtre augmente plus le moyennage inclus de voxels voisins)  
+`Smooth` = lissage spatial.  
+Sélectionner les images fonctionnelles qu'on vient de normaliser ("w...") : ne pas oublier de mettre   ^w.*  et "inf" pour prendre bien toutes les images. 
+Indiquer la taille du filtre gaussien (FWHM) : 8 (mm isotropiques)
+On obtient un fichier commençant par "sw"  
+`Check reg` : je choisis mes images "w" et "sw" en BOLD. L'une est plus floue que l'autre car elle a été smoothée.
+
+#### Remarque :
+Théoriquement on ne pourra par la suite interpréter que les clusters d'activation dont la taille est supérieure ou égale à la valeur du kernel choisi pour le lissage spatial (ici 8 mm).
+
+
+## 4. Principe de l'analyse
 
 On veut trouver les régions cérébrales impliquées dans le processus cérébral visé par la tâche qu'on fait faire au sujet.
 Dans ces régions, le signal devrait varier comme la modulation qu’on impose au sujet par le paradigme expérimental. La série temporel du signal dans ces voxels devrait suivre la série temporelle des conditions comportementale.
@@ -403,138 +583,6 @@ Aujourd’hui des méthodes bayésiennes permettant d’analyser voxel par voxel
 Voici un lien vers un rapport technique écrit par l'équipe du FIL : [Penny W.D., and Flandin G. Bayesian analysis of single-subject fMRI: SPM implementation. Technical report, Wellcome Department of Imaging Neuroscience, 2005](http://www.fil.ion.ucl.ac.uk/spm/doc/papers/vb3.pdf)  
 WikiSPM est aussi bien fait si on a besoin d’aide sur ces nouvelles méthodes.
 
-### Rappels sur les prétraitements
-Avant d'appliquer le modèle d'analyse en régression multiple (GLM), il faut nettoyer le signal, ce sont les **prétraitements**. Voici par exemple la série des prétraitements classiques selon les recommandations pour le logiciel SPM à effectuer en vue d'une analyse d'un groupe de sujets.
-
-  - recalage rapide des images anatomiques et fonctionnelles sur un template
-  - estimation des mouvements de la tête du sujet : paramètres de recalage entre chaque image fonctionnelle
-  - segmentation de l'image anatomique et calcul des paramètres de normalisation, c'est-à-dire le champ de déformation à appliquer à l'image anatomique pour qu'elle colle à un template (opération qui déforme les images)
-  - application de ces paramètres de ce champ de déformation à l'image anatomique et aux images fonctionnelles. **À ce moment, les données sont modifiées !**
-  - lissage spatial des images normalisées par un kernel gaussien :
-    - pour avoir un meilleur rapport signal sur bruit
-    - parce qu'on vient de modifier les propriétés locales des images (interpolation due au recalage et voxels chamboulés par la normalisation)
-    - parce qu'on a besoin de données gaussiennes pour appliquer la régression linéaire massivement univariée
-
-####Remarque importante :  
-il est **toujours** préférable de réfléchir aux prétraitements à appliquer en rapport avec vos hypothèses et vos analyses, et de les optimiser pour votre étude.
-
-## 4. Vérification des données
-
-### Visualiser la série temporelle complete
-Utiliser de préférence **FSLview** dont le petit outil qui permet de voir la série temporelle d'images fonctionnelles comme un film (l'icône ressemble à une pellicule de film) est extrèmement pratique pour vérifier globalement les données :
-
-  - vérification de la bonne acquisition du cerveau du sujet (pas de bout du cerveau coupé par la matrice d'acquisition)
-  - vérification d'influence des artefacts de susceptibilité (notamment dans les régions orbito-frontals, frontopolaires, les hippocampes et les amygdales).
-  - détection de volumes artefactés
-
-### Observations des sources de variance dans le signal
-Visualiser les séries temporelles : avec FSLview, dans les onglets, sélectionnez `Tools -> Timeseries`.
-
-Remarques :
-
-  - variations du signal en dehors du la tête du sujet (bruit)
-  - variations du signal en dehors du tissu cérébral (regarder dans les ventricules)
-  - On peut remarquer de fortes variations à haute fréquence (pulsation cardiaque) dans les régions fortement vascularisées, par exemple au niveau des carotides internes.
-  - variations associées aux mouvements de tête du sujet (pattern moiré/strié)
-  - variations dans les régions touchées par les artefacts de succeptibilité
-  - drift du signal (variation lente)
-  
-### Visualisation de la position des images dans l'espace
-On commence par vérifier que le sujet n'a pas bougé pendant l'acquisition de l'image anatomique (stries sur l'image), ni entre cette acquisition et celle de la première image fonctionnelle.
-
-1. Dans la fenêtre de menu de SPM, cliquez sur le bouton `Check Reg`.
-2. Sélectionnez votre image anatomique et la première frame de l'image fonctionnelle 4D.
-3. Vérifiez si les deux images sont correctes (pas d'artefact bizarre)
-4. Vérifiez que l'ensemble du cerveau (en tenant compte des artefacts de susceptibilité, évidemment) et plus que les structures cérébrales principales (corps calleux, lobes, ventricules) sont bien au même endroit sur les deux images, sinon ça veut dire que le sujet a bougé et qu'il faudra peut-être recaler les images à la main.
-
-### Positionner les images dans le repère MNI
-
-Il s'agit de positionner les images sur le même repère que les template qu'on utilise ensuite pour la normalisation.  En effet, les algorithmes utilisés par SPM sont optimisés pour des images qui sont déjà proches l'une de l'autre.
-On estime la transformation à appliquer en travaillant sur l'image anatomique, qui est plus précise donc où il est plus facile de voir les structures cérébrales. On appliquera cette même transformation à toutes les images fonctionnelles ensuite.
-
-Principe :
-
-- mettre l'origine de l'image sur la commissure antérieure
-- rapprocher l'orientation de celle du template (cerveau moyen) : plan xy qui passe par CA-CP, plan yz sur la sissure inter-hémisphérique.
-- on n'est pas au millimètre près
-
-Rentrer les valeurs suivantes dans le tableau en bas à gauche :
-
-transformation|valeur
---------------|----
-right {mm}    | 1.4
-forward {mm}  | -58
-up  {mm}      | 18.9
-pitch {rad}   | 0.26
-roll  {rad}   | -0.03
-yaw {rad}     | 0.06
-
-**Ne pas toucher aux `resize {x, y ou z}` !**
- 
-Pour appliquer la transformation aux images
-1. cliquez sur le bouton `Reorient...`
-2. vérifiez que l'image anatomique est déjà sélectionnée (ne pas hésiter à ajuster la taille de la fenêtre pour y voir les path en entier)
-3. sélectionnez aussi toutes les frames de l'image fonctionnelle 4D (en mettant un filtre `Inf` à la place du `1`)
-4. cliquez sur le bouton `Done`
- 
-Ensuite pour l’ouvrir Chek reg choisir l’image anatomique et une image fonctionnelle(en tapant dans le filtre le numéro de l’image par exemple)
-On vérifie que les deux images sont bien alignées
-
-
-
-6- Réalignement
- 
-Avoir toujours les mêmes parties du cerveau dans chaque voxel
-On prend une référence soit une image moyenne soit la première
-
-- Realign estimate
-- Créer une "New Session" pui Sélectionner cette session 
-- Specify puis choisir les images BOLD« inf » (sans les duplicatas)
-(aide pour retrouver les fichierscibles si ils ont été renommés : <f.* va permettre de ne sélectionner que les fichierscommençant par f)
-- Num passes : register to first
-- play
-
-En sortie, SPM propose affiche dans la fenêtre graphique deux graphes :
- - les paramètres estimés pour les trois translations (en mm)
- - les paramètres estimés pour les trois rotations (en degrés).
- Permetde vérifier l’ampleur du recalage pour chaque image et chaque translation etangle
- 
-  J'obtiens un fichier rp_func4D.txt
-  
- Quelles sont les transformations de réalignement qui ont été appliquées à chaque image fonctionnelle ?
-
-Il faut repérer les artefacts
- 
- 
-7- Coreggester estimate (on déforme le cerveau de façon à ce qu'il rentre dans l'image de référence)
-Reference :1 ère image fonctionnelle uniquement (on garde la première image fonctionnelle comme référence et on bouge l'anatomique)
-Sourceimage : image anatomique
-
- 
-8- Segmentation (seulement sur l'anat) : calcul des déformations nécessaires à mettre en place sur le cerveau pour normaliser par la suite.
-Objectif: Séparer matière grise, matière blanche, liquide céphalo-rachidien
-Volumes : je prends mon image anatomique
-il faut descendre tout en bas de la denêtre  choisir Déformation fields  et mettre "inverse et forward" (explication?)
-
- 
-9-Normaliser
-Maintenant on va modifier nos images
-Normalize
-Deformation field: Selectionner le nouveau fichier obtenu qui représente la déformation en chaque point (Y-anat va de notre image autemplateet in versement pour inverse y-anat) dans deformation field
-Image to Write : On va choisir les images à réécrire« image to write » : les anat PUIS toutes les fonctionnelles (EN 2 FOIS)
-Voxel Size : je choisis la taille des voxel dans l'image d'arrivée (par ex : l'image anat était en 1 x 1 x1, je la ré-écis en 1 x 1 x 1). je fais la même chose avce les images fonctionnelles qui sont en 3 x3 x3.
-On obtient un fichier commençant par w
-Check Reg : ouvrir les 2 (le fichier commence par "w"). 
-
-Message erreur: error in job execution
- error using => MATLABbatch system
- 
-10 - Smoothing: moyennage de la valeur d'un voxel avec les voxel voisins (plus la taille du filtre augmente plus le moyennage inclue de voxels voisins)
-Smooth = lissage spatial.
-Je choisis les images fonctionnelles que je viens de formaliser ("w...") - ne pas oublier de mettre   ^w.*  et "inf" pour prendre bien toutes les images. 
-Je choisis la taille du filtre gaussien : (8 par 8 ou 4 par 4) (FWHE)
-On obtient un fichier commençant par sw
-Check reg : je choisis mes images "w" et "sw" en BOLD. L'une est plus floue que l'autre car elle a été smoothée. Ici on travaille uniquement sur des activations > ou = à ce qui a été smoothée (8 mm). 
 
 ### Spécification du modèle
 
