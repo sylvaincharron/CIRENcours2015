@@ -1,10 +1,10 @@
 # CIRENcours2015
 Analyse de données IRMf, cours du CIREN, mars 2015
 
-# Séance 3 : 
+# Séance 3, 17 mars 2015 
 Programme :
 
-  - 9h-9h30 : discussion sur les deux articles à lire et reprise des points qui n'ont pas été clair la semaine dernière quant au GLM.
+  - 9h-9h30 : discussion sur les deux articles à lire et reprise des points qui n'ont pas été clairs la semaine dernière quant au GLM.
   - 9h30-9h50h : corrigé des exercices : modèle aléatoire, influence du lissage spatial
   - 9h5a0h-10h10 : théorie sur les tests T et F et les types de seuillage
   - 10h10-10h45 : TD définition d'un modèle événementiel avec régresseurs de mouvements, tests T et F appropriés, interprétation des cartes d'activation
@@ -27,14 +27,70 @@ $\Large{\beta}$ est le vecteur des praramètres de régressions estimés de tell
 
 Paramètres du modèle : ils sont entrés au moment de la spécification du modèle.
 
+### Visualisation des paramètres de régression
+
+ 
 
 
 ## 2. Spécification d'un modèle aléatoire
-Même principe que pour le modèle fait à partir des données de stimulation, mais en modifiant les valeurs pour les **onsets** et les **durations**.
+Même principe que pour le modèle fait à partir des données de stimulation, mais en modifiant les valeurs pour les **onsets** et les **durations**.  
+Cette fois, on va voir comment enchaîner des étapes : Créez un nouveau répertoire pour le modèle aléatoire, puis le choisir comme répertoire courant.
 
-1. Créez un nouveau répertoire pour le modèle aléatoire :
-2. Choisissez ce répertoire comme répertoire courant :
-3. Spécifiez le modèle aléatoire :
+1. Créez un nouveau répertoire pour le modèle aléatoire et le choisir comme répertoire courant:
+  - ouvrez le **Batch Editor** et sélectionnez les modules suivants :
+  - `BasicIO -> Fil/Dir Operations -> Dir Operations -> Change directory`  - `BasicIO -> Fil/Dir Operations -> Dir Operations -> Make directory`
+  - `SPM -> Stats -> fMRI model specification`
+2. Remplissez les paramètres comme suit pour le module `Make Directory`
+  - Parent Directory : /Users/sc/Documents/cours_irmf_CIREN_2015/ds000001/sub001
+  - New Directory Name : model002
+3. Puis pour le module Change Directory, il y a une astuce : utiliser le bouton `Dependency` qui apparaît au lieu de sélectionner le répertoire, et indiquer que vous choissez le répertoire que vous aurez créé avec le module `Make Directory` juste avant en sélectionnant `Make directory: Make Directory 'model002'` puis cliquer sur le bouton `OK`. Cf. image en dessous.
+4. Vous pouvez exécuter le batch avec le petit bouton vert
+
+![Principe du bouton "Dependency" du Batch Editor](images/fenetre-dependency.jpg "Principe du bouton "Dependency" du Batch Editor")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Maintenant que vous avez compris le principe, vous pouvez supprimer ce répertoire et recommencer en ajoutant la spécification du modèle, son exécution et les étapes qui vous paraissent pertinentes
+. Spécifiez le modèle aléatoire :
 
 ```
 Data & Design 
@@ -57,16 +113,40 @@ Et pour les durations :
 
 `10 23 0 5 10 20 30 0 10 1 1 10 10`
 
+Résultat :
 
-
-## 3. Influence des paramètres du modèle
-
-
-
+![Résultat modèle aléatoire](images/result-modele-aleatoire.jpg)
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 3. Influence des paramètres choisis pour l'analyse
+
+Cf. aricle de Joshua Carp.
+
+### Paramètres de prétraitement : le lissage spatial
+
+
+### Paramètre de modèle de premier niveau : basis function
 
 
 # séance 2
@@ -94,9 +174,9 @@ Pour les données d'imagerie, utilisez un viewer DICOM pour récupérer les info
 Ex :
 
  - Mango, gratuit et conçu spécialement pour la recherche en imagerie cérébrale
- - ImageJ, gratuit et léger, génraliste
+ - ImageJ, gratuit et léger, généraliste
  - Osirix, pour mac
- - Les consoles constructeur, comme l'AW au CIREN
+ - Les consoles constructeur, comme l'AW General Electric au CIREN
 
 ###Réorganisation des données dans votre répertoire d'analyse
 
@@ -104,12 +184,41 @@ Suivre les recommandantions de [Open fMRI](https://openfmri.org/content/data-org
 
 ![Une belle arborescence !](images/dataorganisation.png "Organisation des données selon openfmri.org")
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Créer un répertoire qui sera celui de base pour toute l'analyse de données IRMf pour ce cours
 ex :
 
 `/home/sc/Documents/cours_irmf_CIREN_2015`
 
-L'arborescence peut se faire en utilisant votre navigateur de fichier préféré ou en ligne de commande de la façon suivante :
+Vous pouvez construire l'arborescence en utilisant votre navigateur de fichier préféré ou en ligne de commande de la façon suivante :
 
 ```bash
 mkdir ~/Documents/cours_irmf_CIREN_2015
@@ -125,7 +234,7 @@ mkdir ds000001/sub001
 mkdir ds000001/sub001/anatomy ds000001/sub001/behav ds000001/sub001/BOLD ds000001/sub001/model
 ```
 
-Si vous avez plusieurs sujets, vous pouvez facilement créer toute l'arborescence d'un coup avec une petite boucle for
+Si vous avez plusieurs sujets, vous pouvez facilement créer toute l'arborescence d'un coup avec une petite boucle `for`
 
 ```bash
 for suj in {1..25};
@@ -151,7 +260,7 @@ done
 Je vous conseille :
 
 1. de ne **jamais** modifier vos données brutes, vous pouvez monter le volume qui contient vos données en lecture seule pour être tranquille, par exemple avec tout système qui supporte un shell avec `mount -o rdonly`
-2. de toujours utiliser un utilitaire de copie fiable, par exemple rsync, qui conserve les propriétés des fichiers de départ et vous aidera à reprendre votre copie proprement si elle est mar malheur interrompue.
+2. de toujours utiliser un utilitaire de copie fiable, par exemple **rsync**, qui conserve les propriétés des fichiers de départ et vous aidera à reprendre votre copie proprement si elle est mar malheur interrompue.
 
 ```bash
 sudo mount -o rdonly /dev/identifiant_de_votre_partition /media/point_de_montage
@@ -194,49 +303,49 @@ Par ailleurs si vous avez des données nifti compressées (.nii.gz), SPM ne les 
 1. Lancez SPM12 standalone
 2. Cliquez sur le bouton `fMRI`
 3. vous voyez apparaître trois fenêtres :
-  - "SPM12 (6225): Menu" : le menu, celle qui est toute verte, généralement en haut à gauche, avec les boutons regroupés par phase de traitement des données
-  - "SPM12 (6225): Graphics" : celle à droite où s'afficheront toutes les sorties graphiques, qui porte le logo suivi de quelques informations et liens
-  - "SPM12 (6225)" généralement en bas à gauche avec écrit "SPM12" en filigrane, qui sert à afficher la barre de progression des traitement et plus tard à beaucoup d'autres choses.
+  - **SPM12 (6225): Menu** : le menu, celle qui est toute verte, généralement en haut à gauche, avec les boutons regroupés par phase de traitement des données
+  - **SPM12 (6225): Graphics** : celle à droite où s'afficheront toutes les sorties graphiques, qui porte le logo suivi de quelques informations et liens
+  - **SPM12 (6225)** généralement en bas à gauche avec écrit "SPM12" en filigrane, qui sert à afficher la barre de progression des traitement et plus tard à beaucoup d'autres choses.
 3. Je vous conseille d'entrée de jeu de vous placer dans votre répertoire d'analyse de données, pour ce faire, dans la fenêtre de menu, cliquez sur la liste `Utils` et sélectionnez `CD`
-4. Un pop-up "Select new working directory" s'ouvre, il est constitué de deux panneaux
+4. Un pop-up **Select new working directory** s'ouvre, il est constitué de deux panneaux
   - à gauche le panneau de **navigation**, où un clic simple sur un nom de répertoire permet d'y descendre
-  - à droite le panneau de **sélection**, où un clic simple sur un nom de répertoire ou de fichier le sléectionne, il disparaît alors du panneau de sélection et s'affiche 
+  - à droite le panneau de **sélection**, où un clic simple sur un nom de répertoire ou de fichier le séLectionne, il disparaît alors du panneau de sélection et s'affiche 
   - en bas, dans le panneau qui récapitule les objects sélectionnés
 5. Sélectionnez donc votre répertoire d'analyses et cliquez sur le bouton `Done` quand vous avez fini
 
 Remarques :
 
-  - le champ "Filter" s'utilise avec des expressions régulières
-  - les trois champs en haut : "Dir", "Up" et "Prev" aident à la navigation dans l'arborescence.
-  - la première ligne de la liste déroulante "Prev" contient toujours le path vers le répertoire d'installation de SPM12 standalone.
+  - le champ **Filter** s'utilise avec des expressions régulières
+  - les trois champs en haut : **Dir**, **Up** et **Prev** aident à la navigation dans l'arborescence.
+  - la première ligne de la liste déroulante **Prev** contient toujours le path vers le répertoire d'installation de SPM12 standalone.
  
 ### Conversion des dicom en nifti 3D
 
 ####Image anatomique
-1. Dans la fenêtre de menu , cliquez sur le bouton `DICOM Import`, ce qui ouvre une fenêtre pop-up "Batch Editor"
-2. Dans la colonne de droire, il va falloir spécifier les valeurs de paramètres nécessaires. Ce qu'il faut remplir est indiqué par `<-X`
-3. Sélectionner le champs "DICOM files" et appuyez sur le bouton `Specify...`
+1. Dans la fenêtre de menu , cliquez sur le bouton `DICOM Import`, ce qui ouvre une fenêtre pop-up **Batch Editor**
+2. Dans la colonne de droire, il va falloir spécifier les valeurs de paramètres nécessaires. Tout paramètre qu'il faut nécessairement renseigner est indiqué par `<-X`
+3. Sélectionner le champs **DICOM files** et appuyez sur le bouton `Specify...`
 4. Une fenêtre pop-up de sélection de fichiers s'ouvre. Naviguez dans votre arborescence avec la fenêtre de gauche pour sélectionner le répertoire qui continent les images DICOM, c'est-à-dire, depuis votre répertoire de travail :
 `ds000001/sub001/anatomy/anatomy_dicom`
 5. Sélection des images DICOM : dans la fenêtre de sélection, faites un clic droit puis cliquez sur le petit `Select All` qui pop-up. Vérifiez que vous avez bien sélectionné 176 images.
-6. Sélection du répertoire : même principe mais sélectionnez le répertoire où seront les images anatomiques : `ds000001/sub001/anatomy`
-7. Vérifiez que vous avez bien sélectionné le format d'image : ".Output image format         Single file (nii) NIfTI"
-8. Lancez le batch avec le petit triangle vert sur la ligne d'icônes en haut de la fenêtre "Batch Editor".
+6. Sélection du répertoire : même principe mais sélectionnez le répertoire où seront les images anatomiques `ds000001/sub001/anatomy`
+7. Vérifiez que vous avez bien sélectionné le format d'image : `.Output image format`:`Single file (nii) NIfTI`
+8. Lancez le batch avec le petit triangle vert sur la ligne d'icônes en haut de la fenêtre **Batch Editor**.
 9. Une fois la conversion effectuée, vous devez voir un nouveau fichier dans le répertoire `ds000001/sub001/anatomy` : `stest-0011-00001-000001-01.nii`
 10. donnez-lui un nom plus convenable, par exemple :
   - En ligne de commande `mv ds000001/sub001/anatomy/stest-0011-00001-000001-01.nii ds000001/sub001/anatomy/anat.nii `
-  - avec l'interface de "Batch Editor" : dans la fenêtre menu, cliquez sur `Batch`, puis parmi les onglets de la fenêtre "Batch Editor", sur `BasicIO -> File/Dir Operations -> File Operations -> Move/Delete Files`, puis remplissez les paramètres de la façon suivante :
+  - avec l'interface de **Batch Editor** : dans la fenêtre menu, cliquez sur `Batch`, puis parmi les onglets de la fenêtre **Batch Editor**, sur `BasicIO -> File/Dir Operations -> File Operations -> Move/Delete Files`, puis remplissez les paramètres de la façon suivante :
 
 ```
 Files to move/copy/delete     ...ds000001/sub001/anatomy/stest-0011-00001-000001-01.nii
 Action
 .Move and Rename
-..Move to                            .../cours_irmf_CIREN_2015/ds000001/sub001/anatomy/
+..Move to                     .../cours_irmf_CIREN_2015/ds000001/sub001/anatomy/
 ..Pattern/Replacement List
 ...Pattern/Replacement Pair
-....Pattern                                              stest-0011-00001-000001-01.nii
-....Replacement                                                                    anat
-..Unique Filenames                                                           Don't Care
+....Pattern                   stest-0011-00001-000001-01.nii
+....Replacement               anat
+..Unique Filenames            Don't Care
 ```
 
 ####Images fonctionnelles
@@ -250,16 +359,16 @@ Une fois les images converties (ça prend plusieurs minutes), vous devez voir 11
 Il n'est pas nécessaire de renommer les images fonctionnelles fraîchement covnerties en nifti.
 
 
-####Remarques
+####Remarques :
 
-  - vous pouvez faire l'étape 3 en cliquant d'abord sur le bouton `Batch` du menu, puis en sélectionnant parmi les onglets de la fenêtre "Batch Editor" `SPM -> Util -> Import -> DICOM Import`.
+  - vous pouvez faire l'étape 3 en cliquant d'abord sur le bouton `Batch` du menu, puis en sélectionnant parmi les onglets de la fenêtre **Batch Editor** `SPM -> Util -> Import -> DICOM Import`.
   - pour modifier une sélection, il faut à nouveau cliquer que le bouton `Specify...`, puis il suffit de cliquer sur un des item de la liste de sélection en bas de la fenêtre pour le retirer de la liste, sélectionnez ensuite un autre fichier comme précédemment.
 
 
 ### Conversion des nifti 3D en nifti 4D
 Intérêt : un seul fichier pour toute la série temporelle ! C'est beaucoup moins pénible à manipuler et ça n'encombre pas l'ordi avec des tas de fichiers qui sont une plaie pour les transferts et les sauvegardes.
 
-Dans la fenêtre menu, cliquez sur `Batch`, puis parmi les onglets de la fenêtre "Batch Editor", sur `SPM -> Util -> 3D to 4D Conversion`, puis remplissez les paramètres de la façon suivante :
+Dans la fenêtre menu, cliquez sur `Batch`, puis parmi les onglets de la fenêtre **Batch Editor**, sur `SPM -> Util -> 3D to 4D Conversion`, puis remplissez les paramètres de la façon suivante :
 ```
 3D Volumes       # sélectionnez comme vous savez désormais le faire toutes les images .nii du répertoire où vous venez de les créer. Vérifiez que vous en avez bien sélectionné 110.                                                                       
 Output Filename  # choissisez un nom approprié, cf [Open fMRI](https://openfmri.org/content/data-organization) task001_run001.nii
@@ -295,7 +404,7 @@ Voici un lien vers un rapport technique écrit par l'équipe du FIL : [Penny W.D
 WikiSPM est aussi bien fait si on a besoin d’aide sur ces nouvelles méthodes.
 
 ### Rappels sur les prétraitements
-Avant d'appliquer le modèle d'analyse en régression multiple (GLM), il faut nettoyer le signal, ce sont les **prétraitements**. Voici un exemple classique des prétraitements à effectuer en vue d'une analyse d'un groupe de sujets.
+Avant d'appliquer le modèle d'analyse en régression multiple (GLM), il faut nettoyer le signal, ce sont les **prétraitements**. Voici par exemple la série des prétraitements classiques selon les recommandations pour le logiciel SPM à effectuer en vue d'une analyse d'un groupe de sujets.
 
   - recalage rapide des images anatomiques et fonctionnelles sur un template
   - estimation des mouvements de la tête du sujet : paramètres de recalage entre chaque image fonctionnelle
@@ -305,6 +414,9 @@ Avant d'appliquer le modèle d'analyse en régression multiple (GLM), il faut ne
     - pour avoir un meilleur rapport signal sur bruit
     - parce qu'on vient de modifier les propriétés locales des images (interpolation due au recalage et voxels chamboulés par la normalisation)
     - parce qu'on a besoin de données gaussiennes pour appliquer la régression linéaire massivement univariée
+
+####Remarque importante :  
+il est **toujours** préférable de réfléchir aux prétraitements à appliquer en rapport avec vos hypothèses et vos analyses, et de les optimiser pour votre étude.
 
 ## 4. Vérification des données
 
@@ -322,22 +434,22 @@ Remarques :
 
   - variations du signal en dehors du la tête du sujet (bruit)
   - variations du signal en dehors du tissu cérébral (regarder dans les ventricules)
-  - On peut remarquer de fortes variations dans les régions fortement vascularisées, au niveau des carotides par exemple.
+  - On peut remarquer de fortes variations à haute fréquence (pulsation cardiaque) dans les régions fortement vascularisées, par exemple au niveau des carotides internes.
   - variations associées aux mouvements de tête du sujet (pattern moiré/strié)
   - variations dans les régions touchées par les artefacts de succeptibilité
   - drift du signal (variation lente)
   
 ### Visualisation de la position des images dans l'espace
-On commence par vérifier que le sujet n'a pas bougé pendant l'acquisition de l'image anatomique, ni entre cette acquisition et celle de la première image fonctionnelle
+On commence par vérifier que le sujet n'a pas bougé pendant l'acquisition de l'image anatomique (stries sur l'image), ni entre cette acquisition et celle de la première image fonctionnelle.
 
 1. Dans la fenêtre de menu de SPM, cliquez sur le bouton `Check Reg`.
 2. Sélectionnez votre image anatomique et la première frame de l'image fonctionnelle 4D.
 3. Vérifiez si les deux images sont correctes (pas d'artefact bizarre)
-4. Vérifiez que l'ensemble du cerveau et plus finement que les structures crébrales sont bien au même endroit sur les deux images, sinon ça veut dire que le sujet a bougé et qu'il faudra peut-être recaler les images à la main.
+4. Vérifiez que l'ensemble du cerveau (en tenant compte des artefacts de susceptibilité, évidemment) et plus que les structures cérébrales principales (corps calleux, lobes, ventricules) sont bien au même endroit sur les deux images, sinon ça veut dire que le sujet a bougé et qu'il faudra peut-être recaler les images à la main.
 
 ### Positionner les images dans le repère MNI
 
-Il s'agit de positionner les images sur le même repère que les template qu'on utilise ensuite pour la normalisation.  
+Il s'agit de positionner les images sur le même repère que les template qu'on utilise ensuite pour la normalisation.  En effet, les algorithmes utilisés par SPM sont optimisés pour des images qui sont déjà proches l'une de l'autre.
 On estime la transformation à appliquer en travaillant sur l'image anatomique, qui est plus précise donc où il est plus facile de voir les structures cérébrales. On appliquera cette même transformation à toutes les images fonctionnelles ensuite.
 
 Principe :
@@ -367,18 +479,24 @@ Pour appliquer la transformation aux images
  
 Ensuite pour l’ouvrir Chek reg choisir l’image anatomique et une image fonctionnelle(en tapant dans le filtre le numéro de l’image par exemple)
 On vérifie que les deux images sont bien alignées
- 
+
+
+
 6- Réalignement
  
 Avoir toujours les mêmes parties du cerveau dans chaque voxel
 On prend une référence soit une image moyenne soit la première
 
--Realign estimate
--Créer une "New SEssion" pui Sélectionner cette session 
--Specify puis choisir les images BOLD« inf » (sans les duplicatas)
+- Realign estimate
+- Créer une "New Session" pui Sélectionner cette session 
+- Specify puis choisir les images BOLD« inf » (sans les duplicatas)
 (aide pour retrouver les fichierscibles si ils ont été renommés : <f.* va permettre de ne sélectionner que les fichierscommençant par f)
 - Num passes : register to first
--play
+- play
+
+En sortie, SPM propose affiche dans la fenêtre graphique deux graphes :
+ - les paramètres estimés pour les trois translations (en mm)
+ - les paramètres estimés pour les trois rotations (en degrés).
  Permetde vérifier l’ampleur du recalage pour chaque image et chaque translation etangle
  
   J'obtiens un fichier rp_func4D.txt
@@ -528,3 +646,54 @@ import pandas
 d=pandas.read_csv('/Users/sc/Documents/cours_fmri/test_full/ds000001/sub001/behav/data_1.txt',sep=' ',header=0)
 onsets=d.ix[d[d['task']==0].index.values+1]['t_stim'].valuesdurations=d.ix[d[d['task']==0].index.values+10]['t_fin_essai'].values-d.ix[d[d['task']==0].index.values+1]['t_stim'].values
 ```
+
+## Estimation du modèle
+Estimation du modèle :
+
+   1. Sur la fenêtre "menu" de l'interface graphique de SPM, cliquer sur le bouton "Estimate" une fenêtre pop-up du **Batch Editor** s'ouvre, avec le module "Model estimation" chargé (cf colonne de gauche)
+   2. Il faut alors sélectionner le modèle qu'on cherche à estimer. Ce modèle est entièrement décrit dans la structure SPM.mat créée à l'étape "Specify 1st-level" qui doit être enregistrée dans le répertoire qu'on a alors indiqué.
+   3. cliquer sur le bouton "Specify" ou double cliquez sur la ligne "Select SPM.mat", ce qu ouvre la fenêtre de navigation et sélection de fichiers, utiliser cette fenêtre pour sélectionner la structure SPM.mat dans le répertoire approprié
+   4. Sélectionner les paramètres appropriés.
+
+
+Les fichiers suivrants sont créés dans le répertoire du modèle :
+
+    beta_0001.nii : en chaque voxel (donc pour chaque série temporelle), la valeur du paramètre de régression relatif au premier régresseur, ici notre tâche motrice
+    beta_0002.nii : en chaque voxel (donc pour chaque série temporelle), le valeur du paramètre de régression relatif à la constante, donc la moyenne du signal (à un facteur d'échelle près)
+    mask.nii         : les voxels utilisés pour l'analyse
+    ResMS.nii      : l'estimation de la variance résiduelle, en chaque voxel (donc pour chaque série temporelle)
+    RPV.nii          : estimation de la résolution spatiale, qui rend compte des correlations spatiales dans le signal (cf séance sur les méthodes de corrections pour les comparaisons multiples)
+    
+
+Définition d'un contraste :
+
+    Il s'agit désormais de préciser qu'est-ce qu'un compte comparer afin de répondre à notre hypothèse (principe de la méthode soustractive, cf séance sur les design expérimentaux). Dans notre cas, nous cherchons à identifier les voxels dans lesquels la contribution du regresseur relatif à la tâche peut être considérée comme non négligeable. Nous allons donc comparer les coefficient de corrélations relatifs au premier régresseur.
+    Exactement comme dans le cas classique de la régression linéaire multiple, un contraste est défini par une somme alébrique de coefficients se rapportant aux facteurs considérés dans le modèle (plus de détails pendant la 3ème séance).
+    Dans l'idéal, les contrastes doivent être définis au moment de la conception du paradigme expérimental !
+    
+    Dans l'interface SPM, il faut procéder de la façon suivante :
+    
+    1. Sur la fenêtre "menu" de l'interface graphique de SPM, cliquer sur le bouton "Result" une fenêtre pop-up de sélection d'une structure SPM.mat s'ouvre. Sélectionner la SPM.mat du répertoire correspondant à votre modèle
+    2. Lorsque vous cliquez sur "Done" pour valider la sélection, une nouvelle fenêtre pop-up s'ouvre : "SPM contrast manager" !
+    3. Cliquez sur le bouton "Define new contrast..." (écrit en bleu, en bas à gauche)
+    4. Le contraste est défini par :
+        - un nom : ici, sélectionner le champ de texte dans le cadre "name" et y inscrire par exemple "decision_motrice-vs-fixation" (sans les double quote)
+        - un type de test statistique, isi, sélectionner t-constrast avec le petit bouton situé à la gauche du texte dans le cadre "type"
+        - un vecteur de coefficients ("contrast weights vector) pour chaque régresseur : dans le cadre "contrast", entrer les valeurs "1 0" (sans les double quote)
+    5. Quand c'est fait, appuyez sur le bouton "OK"
+    6. Vous devez alors sélctionner le contraste (c'est automatique si vous n'en avez qu'un) quand vous êtes de retour dans la fenêtre de base du "SPM contrast manager" et cliquer sur le bouton "Done"
+    
+Création d'une carte d'activation (une "statistical parametric map" !), qui se fait dans la foulée :
+
+    8. La petite fenêtre de l'interface graphique qui ne servait pas trop jusqu'à présent va servir à préciser le seuil statistiqué appliqué à la carte d'activation afin de visualiser des résultats statistiques, son titre devient "Stats : Results"
+    9. pour le champ "apply masking", choisir "none"
+    10. pour le champ "p value adjustment to control", choisir "none"
+    11. pour le champ threshold {T or p value}, laissez l'option par défaut, à savoir 0.001, et appuyez sur la touche entrée de votre clavier
+    12. pour le champ "& extent threshold {voxels}, laissez l'option par défaut, à savoir 0, et appuyez sur la touche entrée de votre clavier
+
+La fenêtre graphique s'orne désormais :
+
+    1. d'une représentation en "glass brain" des activations en haut à gauche, sur laquelle vous pouvez déplacer en clic&drag le petit > rouge pour que s'affichent dans la fenêtre SPM{T}: Results les coordonnées du voxel choisi dans le repère MNI et la valeur du test en ce point. Un clic droit sur cette image permet de sélectionner des voxels particuliers.
+    2. un rappel du contraste et de la matrice de design en haut à droite
+    3. un grand tableau (lequel peut s'étaler sur plusieurs pages) qui reprend tous les résultats statistiques pour cette carte d'activation seuillée. Ce tableau est cliquable, notamment pour sélectionner un cluster et le visualiser sur l'image
+    
