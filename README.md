@@ -21,19 +21,24 @@ Programme :
 \Huge{Y=\beta X + \epsilon}
 \\]
 
+
+
+
+
+
 $\Large{Y}$ est notre série temporelle des mesures effectuées dans un voxel  
 $\Large{X}$ est la matrice de design qu'on a spécifiée  
-$\Large{\beta}$ est le vecteur des praramètres de régressions estimés de telle sorte que $\Large{\epsilon}$, l'erreur résiduelle, soit la plus petite possible
+$\Large{\beta}$ est le vecteur des paramètres de régressions estimés de telle sorte que $\Large{\epsilon}$, l'erreur résiduelle, soit la plus petite possible
 
 Paramètres du modèle : ils sont entrés au moment de la spécification du modèle.
 
 ### Visualisation des paramètres de régression
 
- Quand un modèle a été estimé, vous pouvez directement regarder les valeurs des paramètres de régression dans les images **beta_000X.nii** créées ainsi que la représentation graphique de l'estimation du modèle en 
+ Quand un modèle a été estimé, vous pouvez directement regarder les valeurs des paramètres de régression dans les images **beta_000X.nii** créées ainsi que la représentation graphique de l'estimation du modèle : 
  
  1. En utilisant le bouton `Display` de la fenêtre **Menu**, aller repérer sur l'image anatomique normalisée quelques voxels pertinents et notre leurs coordonnées "world", par exemple
    - un dans le cortex visuel où on a déjà vu que le signal était fortement corrélé à la stimulation
-   - un voxel où a priori le signal ne sera pas du tout lié au un traitement cognitif lié à la stimulation, typiquement en plein dans un ventricule
+   - un voxel où a priori le signal ne sera pas du tout lié au traitement cognitif lié à la stimulation, typiquement en plein dans un ventricule
    - un voxel quelconque ailleurs dans le cerveau
 2. Encore avec `Display`, vous pouvez noter les valeurs des coefficients de régression associés à chacun des régresseurs directement dans les images **beta_000X.nii** (attention à l'interpolation pour la visualisation dans la fenêtre **Graphics**).
 3. Reprennez le modèle **model001** et choisissez d'afficher les résultats en cliquant sur le bouton `Results`, puis en sélectionnant la **SPM.mat** correspondante, puis dans la fenêtre **SPM contrast manager** le contraste **001{T} decision_motrice-vs-fication**, puis spécifiez le seuil suivant : 
@@ -49,6 +54,30 @@ Paramètres du modèle : ils sont entrés au moment de la spécification du mod�
         4. si vous changez les coordonnées, le graphe se met à jour automatiquement !
 
         ![Contrast estimates and 90% C.I.](images/contrast_estimate_and_90CI.jpg "Contrast estimates and 90% C.I.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
   - le graphe du signal et de la composante relative à notre régresseur d'intérêt :
         1. cliquez sur le bouton `plot` dans l'encadré **Display**
@@ -59,6 +88,29 @@ Paramètres du modèle : ils sont entrés au moment de la spécification du mod�
         4. si vous changez les coordonnées, le graphe se met à jour 
 
         ![Signal et composante relative au régresseur](images/fitted_and_error_againt_time.jpg "Signal et composante relative au régresseur")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## 2. Spécification d'un modèle aléatoire
@@ -76,14 +128,6 @@ Cette fois, on va voir comment enchaîner des étapes : Créez un nouveau réper
 3. Puis pour le module Change Directory, il y a une astuce : utiliser le bouton `Dependency` qui apparaît au lieu de sélectionner le répertoire, et indiquer que vous choissez le répertoire que vous aurez créé avec le module `Make Directory` juste avant en sélectionnant `Make directory: Make Directory 'model002'` puis cliquer sur le bouton `OK`. Cf. image en dessous.
 4. Vous pouvez exécuter le batch avec le petit bouton vert
 ![Principe du bouton "Dependency" du Batch Editor](images/fenetre-dependency.jpg "Principe du bouton "Dependency" du Batch Editor")
-
-
-
-
-
-
-
-
 
 
 
@@ -167,7 +211,10 @@ Résultat :
 
 
 
-Le batch correspondant à cet exemple, ainsi qu'un batch pré-mâché où vous n'avez plus qu'à remplir les informations relatives à vos path et noms de fichiers sont disponible sur GitHub
+
+
+
+Le batch correspondant à cet exemple, ainsi qu'un batch pré-mâché où vous n'avez plus qu'à remplir les informations relatives à vos path et noms de fichiers sont disponible dans le répertoire **models** sur GitHub, il suffit d'un clic droit sur le batch dans la liste pour les télécharger.
 
 ## 3. Influence des paramètres choisis pour l'analyse
 
@@ -176,7 +223,104 @@ Cf. aricle de Joshua Carp.
 ### Paramètres de prétraitement : le lissage spatial
 
 
+
 ### Paramètre de modèle de premier niveau : basis function
+
+Dans la structure **SPM.mat** qui stocke l'ensemble des informations relatives à un modèle, le set de fonctions utilisées pour la convolution est enregistré, comme les autres paramètres que nous avons entrés en spécifiant le modèle.
+
+Parmi les options pour les paramètres du modèle (bouton `Specify 1st-level` de la fenêtre **Menu**), nous avions laissé le choix par défaut, à savoir la réponse hémodynamique canonique (**HRF** pour Haemodynamic Response Function) dont le pic est à 5 secondes après l'onset neuronal et la résurgence à 15 secondes., sans dérivé et sans expansion Volterra:
+
+```
+Basis Functions
+.HRF Canonical
+..Model derivatives              No derivatives
+Model Interactions (Volterra)    Do not model interactions
+```
+Pour obtenir l’expression de la HRF (Haemodynamic Response Function) en fonction du temps, vous pouvez utiliser le bouton `Review` de la fenêtre **Menu** et regarder de nouveau votre régresseur d'intérêt à partir du menu `Design` de la troisème fenêtre :
+
+`Design -> Explore -> Session 1 -> tache_motrice`
+
+Comme le discute l'article de Poline & Brett, la fonction de réponse hémodynamique n’a pas la même forme selon les régions cérébrales, la HRF dite canonique a été mesurée dans le cortex visuel. Si nos hypothèses sont sur des régions qui sont plus loin dans les chaînes de traitement de l'information que le cortex visuel primaire, on peut s'attendre à ce que la réponse hémodynamique diffère (organisation cyto-architectonique différente, boucles de rétro-action, inputs multiples,...).  
+Par ailleurs, on sait aussi que la réponse hémodynamique dans les régions sous-corticales diffère de la HRF mesurée dans le cortex.
+Cette déviation par rapport à la fonction canonique peut s'exprimer sous la forme d'un décalage du pic dans le temps (**Time derivatives**) et d'un étalement plus ou moins important de ce pic dans le temps (**Dispersion derivatives**).
+
+L'expansion Volterra correspont à u problème de corrélation à l’intérieur de notre régresseur : si le timing des différents essais peut induire des effets de corrélation, il est possible de rendre compte de ces non-linéarités en utilisant un ordre 2 pour l'expansion Volterra.
+
+## 4. Tests T et tests F
+
+### Nouveau modèle
+
+Cette fois on va s'intéresser à un modèle qui comportera cette fois deux régresseurs d'intérêts, en profitant du fait que le sujet répondait avec la main droite ou la main gauche en fonction de l'instruction qui apparaissait pendant la tâche de décision motrice.
+
+Contraster les essais avec réponses main gauche versus main droite devrait nous permet de détecter les activations qui sont dépendantes de la réponse motrice puisqu'on va soustraire tout ce qui est commun aux deux conditions, notamment une bonne partie du traitement de l’information visuelle (la seule différence visuellement, c'est le mot affiché : GAUCHE ou DROITE), et des processus de sélection de l'action.
+
+Pour sélectionner les onsets relatifs aux réponses à droite ou à gauche dans le tableau de données comportementales, vous pouvez utiliser **R** :
+
+```r
+d<-read.csv('path_vers_le_repertoire_racine_de_vos_analyses_de_donnees/ds000001/sub001/behav/data_1.txt',header=T,sep=" ")
+onsets_droite<-d[d$reponse==52,"t_stim"]
+write.table(droite, file = "path_vers_votre_repertoire_pour_le_modele/onsets_droite.txt",row.names = FALSE,col.names = FALSE)
+onsets_gauche<-d[d$reponse==49,"t_stim"]
+write.table(gauche, file = "path_vers_votre_repertoire_pour_le_modele/onsets_gauche.txt",row.names = FALSE,col.names = FALSE)
+```
+
+ous pouvez donc construire un nouveau modèle qui comporte deux conditions :
+
+```
+Data & Design 
+.Subject/Session
+..Scans
+..Conditions
+...Condition
+...Name <- mettre reponse_main_droite
+....Onsets <- rentrer ici le vecteur d'onsets correspondants
+....Durations <- mettre zéro comme durée
+....Time Modulations <- ne rien changer
+....Parametric Modulations <- ne rien changer
+....Orthogonalise modulations <- ne rien changer
+...Condition
+...Name <- mettre reponse_main_gauche
+....Onsets <- rentrer ici le vecteur d'onsets correspondants
+....Durations <- mettre zéro comme durée
+....Time Modulations <- ne rien changer
+....Parametric Modulations <- ne rien changer
+....Orthogonalise modulations <- ne rien changer
+```
+
+
+Pour le reste des paramètres, vous pouvez choisir les mêmes paramètres que les autres modèles, et procéder à l'estimation.
+
+Lorsqu'on vérifie la matrice de design, avec le bouton `Review` : on observe alors bien les 2 régresseurs.
+Pour voir leur forme plus en détail, procéder comme auparavant :
+
+`Design -> Explore -> Session 1 -> reponse_main_droite`
+
+et
+
+`Design -> Explore -> Session 1 -> reponse_main_gauche`
+
+### Test F
+
+C'est un test non directionnel qui permet de regarder si au moins l'un des régresseurs qu'on considère a une influence sur la série temporelle du signal dans les voxels. Il s'agit de comparer un modèle et son sous-modèle en faisant une ANOVA entre les 2 modèles respectifs.
+
+Typiquement on commencer par regarder l’ensemble de nos régresseurs d’intérêt, dans notre cas les deux régresseurs **right** et **left**, on construit alors un contraste pour un test F de la façon suivante :
+
+Ouvrez la fenêtre **Contrast editor** en passant par `Results` et la sélection de la **SPM.mat** qui correspond à votre modèle, puis cliquez sur le bouton `Define new contrast...`
+
+Dans l'encadré **name**, écrire `Effects_of_interest`  Dans l'encadré **type**, cocher **F-contrast**Puis entrez la matrice de contraste (**contrast weights matrix**) proprement dite dans l'encadré **contrast**
+```
+1 0 0 1
+```
+
+Au lieu de rentrer la matrice, vous pouvez tout aussi bien utiliser le champ **columns for reduced design** où vous spécifiez les numéros des régresseurs **que vous ne souhaitez pas prendre en compte**, dans notre cas, le troisième régresseur :
+
+`3`
+
+Effectivement il s'agit là du modèle réduit par rapport au modèle complet avec les deux régresseurs d'intérêt en plus. L'ANOVA entre ces deux modèles ne sera significative que pour les voxels où ces deux régresseurs d'interêt expliquent une part suffisamment importante de la variance du signal.
+
+### Test T
+
+
 
 
 # Séance 2
@@ -213,8 +357,6 @@ Ex :
 Suivre les recommandantions de [Open fMRI](https://openfmri.org/content/data-organization) qui vous aideront à ne pas oublier d'information et à toujours conserver une structure propre pour vos données.
 
 ![Une belle arborescence !](images/dataorganisation.png "Organisation des données selon openfmri.org")
-
-
 
 
 
@@ -495,8 +637,8 @@ Pour appliquer la transformation aux images
 3. sélectionnez aussi toutes les frames de l'image fonctionnelle 4D (en mettant un filtre `Inf` à la place du `1`)
 4. cliquez sur le bouton `Done`
  
-Ensuite pour l’ouvrir Chek reg choisir l’image anatomique et une image fonctionnelle(en tapant dans le filtre le numéro de l’image par exemple)
-On vérifie que les deux images sont bien alignées
+Vérification : bouton `Chek Reg` puis sélectionner l’image anatomique et une frame de image fonctionnelle, par exemple en en entrant dans le champs de filtre le numéro de la frame.  
+On vérifie alors que les deux images sont bien alignées.
 
 ### 5.2 Réalignement
  
@@ -506,7 +648,7 @@ On prend une référence soit une image moyenne soit la première
 - Realign estimate
 - Créer une "New Session" puis Sélectionner cette session 
 - Specify puis choisir les images BOLD« inf » (sans les duplicatas)
-(aide pour retrouver les fichierscibles si ils ont été renommés : <f.* va permettre de ne sélectionner que les fichierscommençant par f)
+(aide pour retrouver les fichiers cibles s'ils ont été renommés : `^f.*` va permettre de ne sélectionner que les fichierscommençant par f)
 - Num passes : register to first
 - play
 
@@ -519,10 +661,10 @@ En sortie, SPM propose affiche dans la fenêtre graphique deux graphes :
   
  Quelles sont les transformations de réalignement qui ont été appliquées à chaque image fonctionnelle ?
 
-Il faut repérer les artefacts
+Il faut repérer les artefacts.
  
  
-### 5.3 Coreggester estimate
+### 5.3 Coregister estimate
 On calcule les paramètres de recalage (pour déplacer sans déformer !) de telle sorte que l'image anatomique soit dans le même repère spatial que l'image fonctionnelle de référence. Il s'agit donc encore d'un recalage rigide (6 degré de liberté : 3 translations et 3 rotations).  
 **Reference image** :1ère image fonctionnelle uniquement (on garde la première image fonctionnelle comme référence et on bouge l'anatomique)  
 **Source image** : image anatomique
@@ -532,17 +674,21 @@ On calcule les paramètres de recalage (pour déplacer sans déformer !) de tell
 
 Calcul des déformations nécessaires à mettre en place sur le cerveau pour normaliser par la suite.
 
-Objectif: Séparer matière grise, matière blanche, liquide céphalo-rachidien
+Objectif: Séparer matière grise, matière blanche, liquide céphalo-rachidien  
 Volumes : je prends mon image anatomique.  
-il faut descendre tout en bas de la denêtre  choisir Déformation fields  et mettre "inverse et forward" (explication?)
+il faut descendre tout en bas de la fenêtre pour bien voir le champs **Déformation fields**, pour lequel on indique "inverse et forward".
 
- 
+Explications sur ce dernier point :
+
+- le champs de déformation direct "forward" est celui qu'il faut appliquer à l'image anatomique (et par conséquent aux imaes focntionneles recalées avec cet image structurale) afin de la transformer en une image qui a la même forme que le template MNI. Ainsi, une activation repérée sur les fonctionnelles normalisées après une analyse de groupe pourra être décrite par ses coordonnées MNI et identifiée sur un atlas.
+- le champs de déformation "inverse" est celui qu'il faut appliquer aux voxels template pour retrouver les voxels correspondants pour le cerveau particulier d'un des participants. C'est notamment utile lorsqu'on veut utiliser une analyse en région d'intérête (plus d'explications à ce propos dans la cinquème séance) en définissant une région sur un atlas que l'on va reporter sur l'anatomie propre d'un participant (en contr(olant derrière par la morphologie des giri et sulci que ça ne fait pas n'importe quoi).
+
 ### 5.5 Normalisation
 Maintenant on va modifier nos images.  
 Bouton `Normalize`  
 Deformation field: Selectionner le nouveau fichier obtenu qui représente la déformation en chaque point (Y-anat va de notre image autemplateet in versement pour inverse y-anat) dans deformation field  
 Image to Write : On va choisir les images à réécrire« image to write » : les anat PUIS toutes les fonctionnelles (EN 2 FOIS)  
-Voxel Size : je choisis la taille en mm des voxel dans l'image d'arrivée (par ex : l'image anat était en 1 x 1 x 1, je la ré-écris en 1 x 1 x 1). Même chose avce les images fonctionnelles qui sont en 3 x 3 x 3.  
+Voxel Size : je choisis la taille en mm des voxels dans l'image d'arrivée (par ex : l'image anat était en 1 x 1 x 1, je la ré-écris en 1 x 1 x 1). Même chose avce les images fonctionnelles qui sont en 3 x 3 x 3.  
 On obtient un fichierr pour l'image normalisée qui commence par "w"  
 `Check Reg` : ouvrir les images avant et après normalisation. 
 
@@ -550,7 +696,7 @@ Message erreur: error in job execution
  error using => MATLABbatch system
  
 ### 5.6 - Lissage spatial
-Moyennage de la valeur d'un voxel avec les voxel voisins (plus la taille du filtre augmente plus le moyennage inclus de voxels voisins)  
+Moyennage de la valeur d'un voxel avec les voxels voisins (plus la taille du filtre augmente plus le moyennage inclus de voxels voisins)  
 `Smooth` = lissage spatial.  
 Sélectionner les images fonctionnelles qu'on vient de normaliser ("w...") : ne pas oublier de mettre   ^w.*  et "inf" pour prendre bien toutes les images. 
 Indiquer la taille du filtre gaussien (FWHM) : 8 (mm isotropiques)
@@ -619,9 +765,9 @@ Data & Design
 ....Orthogonalise modulations <- laisser comme c'est de toute façon on n'utilise pas de modulation pour le moment.
 ```
 
-#####Pour ce qui est des valeurs à prendre en compte pour le vecteur d'onsets, voici deux façon de procéder.
+####Pour ce qui est des valeurs à prendre en compte pour le vecteur d'onsets, voici deux façon de procéder.
 
-#####1. À partir des informations a priori sur la stimulation
+####1. À partir des informations a priori sur la stimulation
 La manip est constituée de 12 blocs en tout, avec en alternance 6 blocs de fixation et 6 blocs d'instructions motrices.
 Si on se base sur ces informations pour construire le régresseur, voici ce que ça donne :
 
@@ -669,7 +815,7 @@ Voir le repository GitHub pour le code python qui permet de reproduire l'image.
 
 ![Code pyhton sur GitHub](images/task_and_acquisition_time_series.png)
 
-#####2. À partir du fichier des informations enregistrées par le logiciel de stimulation pendant la manip, où apparaissent les timings réels d'apparition des instructions.
+####2. À partir du fichier des informations enregistrées par le logiciel de stimulation pendant la manip, où apparaissent les timings réels d'apparition des instructions.
 
 Si vous utilisez R, vous pouvez retrouver les timings de la façon suivante :
 
@@ -715,33 +861,32 @@ Les fichiers suivrants sont créés dans le répertoire du modèle :
 
 Définition d'un contraste :
 
-    Il s'agit désormais de préciser qu'est-ce qu'un compte comparer afin de répondre à notre hypothèse (principe de la méthode soustractive, cf séance sur les design expérimentaux). Dans notre cas, nous cherchons à identifier les voxels dans lesquels la contribution du regresseur relatif à la tâche peut être considérée comme non négligeable. Nous allons donc comparer les coefficient de corrélations relatifs au premier régresseur.
-    Exactement comme dans le cas classique de la régression linéaire multiple, un contraste est défini par une somme alébrique de coefficients se rapportant aux facteurs considérés dans le modèle (plus de détails pendant la 3ème séance).
-    Dans l'idéal, les contrastes doivent être définis au moment de la conception du paradigme expérimental !
-    
-    Dans l'interface SPM, il faut procéder de la façon suivante :
-    
-    1. Sur la fenêtre "menu" de l'interface graphique de SPM, cliquer sur le bouton "Result" une fenêtre pop-up de sélection d'une structure SPM.mat s'ouvre. Sélectionner la SPM.mat du répertoire correspondant à votre modèle
-    2. Lorsque vous cliquez sur "Done" pour valider la sélection, une nouvelle fenêtre pop-up s'ouvre : "SPM contrast manager" !
-    3. Cliquez sur le bouton "Define new contrast..." (écrit en bleu, en bas à gauche)
-    4. Le contraste est défini par :
-        - un nom : ici, sélectionner le champ de texte dans le cadre "name" et y inscrire par exemple "decision_motrice-vs-fixation" (sans les double quote)
-        - un type de test statistique, isi, sélectionner t-constrast avec le petit bouton situé à la gauche du texte dans le cadre "type"
-        - un vecteur de coefficients ("contrast weights vector) pour chaque régresseur : dans le cadre "contrast", entrer les valeurs "1 0" (sans les double quote)
-    5. Quand c'est fait, appuyez sur le bouton "OK"
-    6. Vous devez alors sélctionner le contraste (c'est automatique si vous n'en avez qu'un) quand vous êtes de retour dans la fenêtre de base du "SPM contrast manager" et cliquer sur le bouton "Done"
+Il s'agit désormais de préciser qu'est-ce qu'on compte comparer afin de répondre à notre hypothèse (principe de la méthode soustractive, cf séance sur les design expérimentaux). Dans notre cas, nous cherchons à identifier les voxels dans lesquels la contribution du regresseur relatif à la tâche peut être considérée comme non négligeable. Nous allons donc comparer les coefficient de régression relatifs au premier régresseur.  
+Exactement comme dans le cas classique de la régression linéaire multiple, un contraste est défini par une somme alébrique de coefficients se rapportant aux facteurs considérés dans le modèle (plus de détails pendant la 3ème séance).  
+**Dans l'idéal, les contrastes doivent être définis au moment de la conception du paradigme expérimental !**
+
+Dans l'interface SPM, il faut procéder de la façon suivante :
+
+1. Sur la fenêtre "menu" de l'interface graphique de SPM, cliquer sur le bouton `Result` une fenêtre pop-up de sélection d'une structure SPM.mat s'ouvre. Sélectionner la SPM.mat du répertoire correspondant à votre modèle
+2. Lorsque vous cliquez sur `Done` pour valider la sélection, une nouvelle fenêtre pop-up s'ouvre : **SPM contrast manager** !
+3. Cliquez sur le bouton "Define new contrast..." (écrit en bleu, en bas à gauche)
+4. Le contraste est défini par :
+    - un nom : ici, sélectionner le champ de texte dans le cadre "name" et y inscrire par exemple "decision_motrice-vs-fixation" (sans les double quote)
+    - un type de test statistique, isi, sélectionner t-constrast avec le petit bouton situé à la gauche du texte dans le cadre "type"
+    - un vecteur de coefficients ("contrast weights vector) pour chaque régresseur : dans le cadre "contrast", entrer les valeurs "1 0" (sans les double quote)
+5. Quand c'est fait, appuyez sur le bouton "OK"
+6. Vous devez alors sélctionner le contraste (c'est automatique si vous n'en avez qu'un) quand vous êtes de retour dans la fenêtre de base du "SPM contrast manager" et cliquer sur le bouton "Done"
     
 Création d'une carte d'activation (une "statistical parametric map" !), qui se fait dans la foulée :
 
-    8. La petite fenêtre de l'interface graphique qui ne servait pas trop jusqu'à présent va servir à préciser le seuil statistiqué appliqué à la carte d'activation afin de visualiser des résultats statistiques, son titre devient "Stats : Results"
-    9. pour le champ "apply masking", choisir "none"
-    10. pour le champ "p value adjustment to control", choisir "none"
-    11. pour le champ threshold {T or p value}, laissez l'option par défaut, à savoir 0.001, et appuyez sur la touche entrée de votre clavier
-    12. pour le champ "& extent threshold {voxels}, laissez l'option par défaut, à savoir 0, et appuyez sur la touche entrée de votre clavier
+8. La petite fenêtre de l'interface graphique qui ne servait pas trop jusqu'à présent va servir à préciser le seuil statistiqué appliqué à la carte d'activation afin de visualiser des résultats statistiques, son titre devient "Stats : Results"
+9. pour le champ "apply masking", choisir "none"
+10. pour le champ "p value adjustment to control", choisir "none"
+11. pour le champ threshold {T or p value}, laissez l'option par défaut, à savoir 0.001, et appuyez sur la touche entrée de votre clavier
+12. pour le champ "& extent threshold {voxels}, laissez l'option par défaut, à savoir 0, et appuyez sur la touche entrée de votre clavier
 
 La fenêtre graphique s'orne désormais :
 
-    1. d'une représentation en "glass brain" des activations en haut à gauche, sur laquelle vous pouvez déplacer en clic&drag le petit > rouge pour que s'affichent dans la fenêtre SPM{T}: Results les coordonnées du voxel choisi dans le repère MNI et la valeur du test en ce point. Un clic droit sur cette image permet de sélectionner des voxels particuliers.
-    2. un rappel du contraste et de la matrice de design en haut à droite
-    3. un grand tableau (lequel peut s'étaler sur plusieurs pages) qui reprend tous les résultats statistiques pour cette carte d'activation seuillée. Ce tableau est cliquable, notamment pour sélectionner un cluster et le visualiser sur l'image
-    
+1. d'une représentation en "glass brain" des activations en haut à gauche, sur laquelle vous pouvez déplacer en clic&drag le petit **>** rouge pour que s'affichent dans la fenêtre SPM{T}: Results les coordonnées du voxel choisi dans le repère MNI et la valeur du test en ce point. Un clic droit sur cette image permet de sélectionner des voxels particuliers.
+2. un rappel du contraste et de la matrice de design en haut à droite
+3. un grand tableau (lequel peut s'étaler sur plusieurs pages) qui reprend tous les résultats statistiques pour cette carte d'activation seuillée. Ce tableau est cliquable, notamment pour sélectionner un cluster et le visualiser sur l'image
