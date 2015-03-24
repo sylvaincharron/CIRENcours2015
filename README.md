@@ -1,6 +1,21 @@
 # CIRENcours2015
 Analyse de données IRMf, cours du CIREN, mars 2015
 
+
+# Séance 4, 24 mars 2015
+
+Programme :
+
+  - 9h00-9h20 : discussion sur les comparaisons multiples.
+  - 9h20-9h40 : corrigé des exercices : F tests sur les régresseurs d'intérêt et de mouvement, Corrections pour les comparaisons multiples.
+  - 9h40-9h55 : Paradigmes factoriels, matrices de design et contrastes
+  - 9h50-10h00 : TD premier niveau sur paradigme factoriel
+  - 10h10-10h10 : Principe des analyses de second niveau
+  - 10h30-10h45 : TD second niveau sur paradigmes factoriel
+  
+  
+
+
 # Séance 3, 17 mars 2015 
 Programme :
 
@@ -218,7 +233,7 @@ Le batch correspondant à cet exemple, ainsi qu'un batch pré-mâché où vous n
 
 ## 3. Influence des paramètres choisis pour l'analyse
 
-Cf. aricle de Joshua Carp.
+Cf. article de Joshua Carp.
 
 ### Paramètres de prétraitement : le lissage spatial
 
@@ -240,9 +255,16 @@ Model Interactions (Volterra)    Do not model interactions
 
 `Design -> Explore -> Session 1 -> tache_motrice`
 
-Comme le discute l'article de Poline & Brett, la fonction de réponse hémodynamique n’a pas la même forme selon les régions cérébrales, la HRF dite canonique a été mesurée dans le cortex visuel. Si nos hypothèses sont sur des régions qui sont plus loin dans les chaînes de traitement de l'information que le cortex visuel primaire, on peut s'attendre à ce que la réponse hémodynamique diffère (organisation cyto-architectonique différente, boucles de rétro-action, inputs multiples,...).  
-Par ailleurs, on sait aussi que la réponse hémodynamique dans les régions sous-corticales diffère de la HRF mesurée dans le cortex.
+Comme le discute l'article de Poline & Brett, la fonction de réponse hémodynamique n’a pas la même forme selon les régions cérébrales, la HRF dite canonique a été mesurée dans le cortex visuel, cf.  
+[Boynton G.M., Engel S.A., and Heeger D.J.,. Linear Systems Analysis of the fMRI Signal. Neuroimage, 2012 Aug 15; 62(2): 975–984.](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3359416/)
+
+
+Si nos hypothèses sont sur des régions qui sont plus loin dans les chaînes de traitement de l'information que le cortex visuel primaire, on peut s'attendre à ce que la réponse hémodynamique diffère (organisation cyto-architectonique différente, boucles de rétro-action, inputs multiples,...). On sait aussi que la réponse hémodynamique dans les régions sous-corticales diffère de la HRF mesurée dans le cortex. Par ailleurs, la réponse hémodynamique varie aussi d'un sujet à l'autre :   
+[Handwerker D.A., Ollinger J.M., and D’Esposito M., Variation of BOLD hemodynamic responses across subjects and brain regions and their effects on statistical analyses. Neuroimage, 2004 April; 21(4): 1639–1651](http://www.researchgate.net/profile/John_Ollinger/publication/8649558_Variation_of_BOLD_hemodynamic_responses_across_subjects_and_brain_regions_and_their_effects_on_statistical_analyses/links/00b4952cc2ce424e94000000.pdf)
+
 Cette déviation par rapport à la fonction canonique peut s'exprimer sous la forme d'un décalage du pic dans le temps (**Time derivatives**) et d'un étalement plus ou moins important de ce pic dans le temps (**Dispersion derivatives**).
+
+
 
 L'expansion Volterra correspont à u problème de corrélation à l’intérieur de notre régresseur : si le timing des différents essais peut induire des effets de corrélation, il est possible de rendre compte de ces non-linéarités en utilisant un ordre 2 pour l'expansion Volterra.
 
@@ -264,7 +286,7 @@ onsets_gauche<-d[d$reponse==49,"t_stim"]
 write.table(gauche, file = "path_vers_votre_repertoire_pour_le_modele/onsets_gauche.txt",row.names = FALSE,col.names = FALSE)
 ```
 
-ous pouvez donc construire un nouveau modèle qui comporte deux conditions :
+Vous pouvez donc construire un nouveau modèle qui comporte deux conditions :
 
 ```
 Data & Design 
@@ -301,7 +323,7 @@ et
 
 ### Test F
 
-C'est un test non directionnel qui permet de regarder si au moins l'un des régresseurs qu'on considère a une influence sur la série temporelle du signal dans les voxels. Il s'agit de comparer un modèle et son sous-modèle en faisant une ANOVA entre les 2 modèles respectifs.
+C'est un test non directionnel qui permet de regarder si au moins l'un des régresseurs que l'on considère a une influence sur la série temporelle du signal dans les voxels. Il s'agit de comparer un modèle et son sous-modèle en faisant une ANOVA entre les 2 modèles respectifs.
 
 Typiquement on commencer par regarder l’ensemble de nos régresseurs d’intérêt, dans notre cas les deux régresseurs **right** et **left**, on construit alors un contraste pour un test F de la façon suivante :
 
@@ -318,9 +340,35 @@ Au lieu de rentrer la matrice, vous pouvez tout aussi bien utiliser le champ **c
 
 Effectivement il s'agit là du modèle réduit par rapport au modèle complet avec les deux régresseurs d'intérêt en plus. L'ANOVA entre ces deux modèles ne sera significative que pour les voxels où ces deux régresseurs d'interêt expliquent une part suffisamment importante de la variance du signal.
 
+
+
 ### Test T
 
+Les tests T sont ceux qu'on a déjà utilisés, ils permettent de comparer différentes conditions.
 
+####Attention : SPM ne montre sur la fenêtre de **Résultats** que les valeurs positives !
+
+Avec ces T-tests, on peut naïvement les résultats pour un seuil choisi à `p<=0.001 et 0 voxels` :
+  -	gauche vs droit (le sujet répond avec la main gauche) : l'affichage sur la glass-brain par défaut est en conventions neurologique : on observe bin un cluster activé dans cortex moteur droit.   -	droite vs gauche : au seuil choisit on n’observe rien.
+
+Attention, on ne peut pas dire qu'il n'y a pas d'activation motrice ! On sait pertinament que le sujet a répondu puisqu'on a défini les régresseur à partir de l'enregistrement par le système de stimulation d'un appui sur un bouton.  
+C’est juste une question de seuil. Si on change la valeur de seuil pour une valeur beaucoup plus libérale (par exemple `p <=1 et 0 voxel`), on observe de l’activité cérébrale quasiment partout. Ne pas voir d'activation sur le glass-brain après un test ne veut donc pas dire qu’il n’y a pas d’activation ça veut juste dire que ça ne sort pas statistiquement. Il n'est donc comme d'habitude pas possible de conclure sur un effet non significatif dans le cadre des statistiques fréquentistes.## 5 Le problème des comparaisons multiples
+
+Jusqu’ici on a travaillé qu’avec des seuils non corrigés (.001) or le nombre de voxels sur lesquels le modèle est appliqué s'élève à environ 26000. Pour un seuil alpha  de 0.001, il y a donc 0.001*26000 = 26 voxels qui peuvent être activés par hasard.  Quand on reprend notre contraste left vs right, on se rend compte de l'importance de regarder le nombre de voxels qui constituent ce cluster (colonnne kE : 18 voxels).  
+Donc ça pourrait être dû au hasard, surtout qu'on a de la corrélation spatiale et qu'on a lissé avec un kernel à 8mm de FWHM, donc ce n'est pas étonnant qu'un voxel dont le signal  
+Statistiquement ça ne tient pas le choc non plus. 
+
+### 1. Correction family-wise de Bonferroni
+
+Il est tout à fait possible d'appliquer la méthode de correction classique de Bonferronni, c'est à dire d'appliquer un nouveau seuil égal au seuil alpha divisé par le nombre de comparaisons effectuées.
+
+### 2. Correction family-wise Théorie des Champs Aléatoires (gaussiens)Plusieurs types de stat : liées au pic (critère voxel par voxel) ou travailler au niveau du cluster (estimer quelle est la probabilité de trouver un certains nombres de voxels par hasard puis le nombres de voxels par hasard qui pourrait être côte à côte). En effet nos voxels ont de fortes corrélations spatiales (de plus, on a smoothé le signal à 8 mm).
+
+On peut calculer la proabilité de trouver un cluster d’une certaine taille. Il y a des méthodes non paramétriques et il y a des estimations qui calculent le nombre de voxel par cluster en tenant compte de la résolution spatiale de notre image (cf fichier RPV que l’on ouvre avec Mango). C’est une image de la corrélation spatiale dans mes données. Par rapport aux donnés originales, c’est un calcul d’un resel (élément de résolution) : donne une idée de quelle est la grosseur de quelque chose de cohérent en terme de signal, de spatialement corrélé, donne une estimation de la résolution réelle de l’image. 
+
+
+
+je prends un point je vois que c’est = 0.02 (si je divise 1/0.02 = 50). Gaussian RFT : estimation pour calculer les éléments indépendants. Estimer combien j’ai de trucs indépendants dans mon image ce qui me permet de corriger pour les comparaisons multiples (correction sur ce qui a du sens). Cette méthode tient compte de la nature spatiale du signal qui est d’être corrélée à un certain niveau. Les méthodes de correction (FWE - de type Bonferroni) qui joue sur le seuil alpha. On peut l’appliquer dans Contrasts (petite fenêtre) à côté de design - significance level - set to FWE .05.Seuil .01 et correction Bonferroni pour 26 000 voxels = mon seuil fait 0.001/26000 = 3.8 par 10 moins 8.Je définis une p value qui est a 3.8 10-8 (0.000000038).Bonferroni est un peu plus conservatrice que la méthode FWE qui prend en compte le nombre de resel puisqu'il suffit que Si on regarde des contrastes d’intérêt on a de fortes chances que les contrastes ne survivent pas à notre correction.2 autres méthodes de correction existent : FDR (on change les deux seuils : alpha et beta). Cette méthode est encore moins stringente que la méthode par les resel. FDR permet de sortir plus de résultats. La manière de faire les corrections de type FDR a changé entre SPM 5 et SPM 8. Contrôler les faux positifs que l’on voit sur nos images : on considère un seuil acceptable de faux positifs. On prend une carte d’activation, on prend touts les valeurs de p que l’on classe et on choisit le seuil que l’on veut supporter (eg. 5% de faux positifs).  Faire un premier test a un seuil non corrigé et ré-utiliser pour la correction les valeurs de FDR soit pour les peak ou les cluster puis voir les interprétations qui divergent entre les peak et les cluster. ### 2. Correction family-wise Théorie des Champs Aléatoires (gaussiens)SPM impose la correction FWE, mais si je veux faire du FDR, je regarde ce qui est écrit dans mon interface graphique (en bas à gauche), je note FDR = .33 (le chiffre) ainsi que le nombre de cluster juste à côté. Pour les ROI, on va corriger uniquement par le nombre de voxel dans la région d’intérêt. Mais si on se base sur une toute petite petite région, diviser par le nombre de voxel pour corriger les comparaisons multiples est ridicule...Exo à faire : Regarder l’influence que peuvent avoir les paramètres de mouvement (cf Batch de Sylvain). Faire des t-test des f-test etc et regarder les différentes méthodes utilisées pour les comparaisons multiples. 
 
 
 # Séance 2
