@@ -6,17 +6,22 @@ Analyse de données IRMf, cours du CIREN, mars 2015
 
 Programme :
 
-  - 9h00-9h20 : discussion sur les comparaisons multiples.
-  - 9h20-9h40 : corrigé des exercices : F tests sur les régresseurs d'intérêt et de mouvement, Corrections pour les comparaisons multiples.
-  - 9h40-9h55 : Paradigmes factoriels, matrices de design et contrastes
-  - 9h50-10h00 : TD premier niveau sur paradigme factoriel
-  - 10h10-10h10 : Principe des analyses de second niveau
-  - 10h30-10h45 : TD second niveau sur paradigmes factoriel
- 
-####Attention le programme n'est pas à jour !
-  
-  petite modif pour tester
+  - Discussion sur les articles de Bennett et précision sur les méthodes de correction pour les comparaisons multiples.
+  - Corrigé des exercices :
+     - modèle avec régresseurs de mouvements
+     - F tests sur les régresseurs d'intérêt et de mouvement
+  - Spécificité des paradigmes en IRMf
+  - Paradigmes factoriels, matrices de design et contrastes
+  - Principe des analyses de second niveau
 
+Les designs paramétriques seront abordés en début de séance 5, avec la discussion sur l'article d'O'Doherty.
+
+Documents complémentaires :
+- [Slides de Rik Henson](http://imaging.mrc-cbu.cam.ac.uk/imaging/SpmMiniCourse) (le [wiki du MRC Cognition and Brain Sciences Unit](http://imaging.mrc-cbu.cam.ac.uk/imaging/CbuImaging) est une mine de connaissance et de conseils sur l'imagerie
+- [Cours de Mélanie Pélégrini-Isaac au CENIR](http://cours.cenir.org/index.php?dir=2014%2F&download=Cours_Pelegrini_IHU_at_ICM_310314.pdf)
+- Notebooks IPython de Matthew Brett :
+   - [Thresholding with Random Field Theory](http://perrin.dynevor.org/random_fields.html)
+   - [Thresholding with false discovery rate](http://nbviewer.ipython.org/github/practical-neuroimaging/pna-notebooks/blob/master/FDR.ipynb)
 
 # Séance 3, 17 mars 2015 
 Programme :
