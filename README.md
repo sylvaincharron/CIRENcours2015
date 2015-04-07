@@ -6,7 +6,7 @@ Analyse de données IRMf, cours du CIREN, mars 2015
 
 Programme :
 
-  - 9h00-9h20 : discussion sur les comparaisons multiples.
+  - Discussion sur les articles de les comparaisons multiples.
   - 9h20-9h40 : corrigé des exercices : F tests sur les régresseurs d'intérêt et de mouvement, Corrections pour les comparaisons multiples.
   - 9h40-9h55 : Paradigmes factoriels, matrices de design et contrastes
   - 9h50-10h00 : TD premier niveau sur paradigme factoriel
@@ -534,7 +534,7 @@ cf.
 
 Remarques :
 
-  - le champ **Filter** s'utilise avec des expressions régulières
+  - le champ **Filter** s'utilise avec des [**expressions régulières**](http://fr.mathworks.com/help/matlab/matlab_prog/regular-expressions.html)
   - les trois champs en haut : **Dir**, **Up** et **Prev** aident à la navigation dans l'arborescence.
   - la première ligne de la liste déroulante **Prev** contient toujours le path vers le répertoire d'installation de SPM12 standalone.
 
