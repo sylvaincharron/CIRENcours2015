@@ -1,6 +1,22 @@
 # CIRENcours2015
 Analyse de données IRMf, cours du CIREN, mars 2015
 
+# Séance 5, 31 mars 2015
+
+Programme :
+  - Discussion sur l'article de O'Doherty et sur les design paramétriques
+  - Corrigé des exercices : 
+    - Spécification du modèle d'analyse pour un design factoriel (set de données SPM)
+    - Spécification automatique des contrastes pour le design factoriel
+  - Définition d'une région d'intérêt
+    - sphère autour de coordonnées
+    - depuis un atlas
+  - Utilisation de la ROI pour l'analyse
+    - masque
+    - Small Volume Corrections
+
+Documents complémentaires :
+ - [Poldrack R. A., Region of interest analysis for fMRI, Social Cognitive and Affective Neuroscience (2007) 2 (1): 67-70. | doi: 10.1093/scan/nsm006](http://scan.oxfordjournals.org/content/2/1/67.full)
 
 # Séance 4, 24 mars 2015
 
@@ -588,7 +604,7 @@ cf.
 
 Remarques :
 
-  - le champ **Filter** s'utilise avec des expressions régulières
+  - le champ **Filter** s'utilise avec des [**expressions régulières**](http://fr.mathworks.com/help/matlab/matlab_prog/regular-expressions.html)
   - les trois champs en haut : **Dir**, **Up** et **Prev** aident à la navigation dans l'arborescence.
   - la première ligne de la liste déroulante **Prev** contient toujours le path vers le répertoire d'installation de SPM12 standalone.
 
